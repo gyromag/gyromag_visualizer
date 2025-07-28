@@ -148,6 +148,7 @@ let speed = 0;
 
  // GUI
     var gui  = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+    
 
         const grid = new BABYLON.GUI.Grid();
         grid.addColumnDefinition(50, true);  // Column 1: fixed width
@@ -156,7 +157,21 @@ let speed = 0;
         grid.addColumnDefinition(100 , true); 
         grid.addRowDefinition(25, true);
         grid.addRowDefinition(25, true);
+        grid.addRowDefinition(25, true);
+        
         gui.addControl(grid);
+grid.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+        grid.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+        grid.width = "80%";
+        grid.height = "150px";
+
+        const grid2 = new BABYLON.GUI.Grid();
+        grid2.addColumnDefinition(50, true);  // Column 1: fixed width
+        grid2.addColumnDefinition(50, true);        // Column 2: relative width
+        grid2.addRowDefinition(25, true);
+        grid2.addRowDefinition(25, true);
+        //gui.addControl(grid2);
+        grid.addControl(grid2, 2, 2);
 
             // Checkbox
             const checkbox1 = new BABYLON.GUI.Checkbox();
@@ -164,54 +179,90 @@ let speed = 0;
             checkbox1.height = "20px";
             checkbox1.color = "white";
             checkbox1.isChecked = false;
-            grid.addControl(checkbox1, 0, 0);
+            grid2.addControl(checkbox1, 0, 0);
+
             const checkbox2 = new BABYLON.GUI.Checkbox();
             checkbox2.width = "20px";
             checkbox2.height = "20px";
             checkbox2.color = "white";
             checkbox2.isChecked = false;
+            checkbox2.onIsCheckedChangedObservable.add(function(value) {
+                if (sliderB1 && value) {
+                    slider.color = "green";                    
+                }
+                if (sliderB1 && !value) {
+                    slider.color = "gray";                    
+                }
+                
+            });
+            
             grid.addControl(checkbox2, 1, 0);
 
             
-            const textBlock1 = new BABYLON.GUI.TextBlock();
-            textBlock1.text = `B0`;
-            textBlock1.color = "white";
-            textBlock1.fontSize = 18;
-            textBlock1.height = "30px";
-            textBlock1.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-            grid.addControl(textBlock1, 0, 1);
+            const labelB0 = new BABYLON.GUI.TextBlock();
+            labelB0.text = `B0`;
+            labelB0.color = "white";
+            labelB0.fontSize = 18;
+            labelB0.height = "30px";
+            labelB0.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+            grid.addControl(labelB0, 0, 1);
 
-            const textBlock2 = new BABYLON.GUI.TextBlock();
-            textBlock2.text = `B1`;
-            textBlock2.color = "white";
-            textBlock2.fontSize = 18;
-            textBlock2.height = "30px";
-            textBlock2.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-            grid.addControl(textBlock2, 1, 1);
+            const valueB0 = new BABYLON.GUI.TextBlock();
+            valueB0.text = `0`;
+            valueB0.color = "white";
+            valueB0.fontSize = 18;
+            valueB0.height = "30px";
+            valueB0.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+            grid.addControl(valueB0, 0, 3);
 
-            const textBlock3 = new BABYLON.GUI.TextBlock();
-            textBlock3.text = `B1`;
-            textBlock3.color = "white";
-            textBlock3.fontSize = 18;
-            textBlock3.height = "30px";
-            textBlock3.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-            grid.addControl(textBlock3, 1, 3);
+            const labelB1 = new BABYLON.GUI.TextBlock();
+            labelB1.text = `B1`;
+            labelB1.color = "white";
+            labelB1.fontSize = 18;
+            labelB1.height = "30px";
+            labelB1.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+            grid.addControl(labelB1, 1, 1);
 
-
-            // Slider
-            const slider = new BABYLON.GUI.Slider();
-            slider.minimum = -100;
-            slider.maximum = 100;
-            slider.value = 0;
-            slider.height = "20px";
-            slider.width = "100%";
-            slider.color = "green";
-            slider.background = "gray";
-            slider.onValueChangedObservable.add(function(value) {
+            const valueB1 = new BABYLON.GUI.TextBlock();
+            valueB1.text = `0`;
+            valueB1.color = "white";
+            valueB1.fontSize = 18;
+            valueB1.height = "30px";
+            valueB1.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+            grid.addControl(valueB1, 1, 3);
+            
+            
+            // Slider for B1
+            const sliderB1 = new BABYLON.GUI.Slider();
+            sliderB1.minimum = -100;
+            sliderB1.maximum = 100;
+            sliderB1.value = 0;
+            sliderB1.height = "20px";
+            sliderB1.width = "100%";
+            sliderB1.color = "green";
+            sliderB1.background = "gray";
+            sliderB1.onValueChangedObservable.add(function(value) {
                B1 = Math.round(value, 2);
-               textBlock3.text = "f = " + B1;                
+               valueB1.text = "f = " + B1;
+               speed=B1*0.01;               
              });
-            grid.addControl(slider, 1, 2);
+            grid.addControl(sliderB1, 1, 2);
+
+            // Slider for B0
+            const sliderB0 = new BABYLON.GUI.Slider();
+            sliderB0.minimum = -100;
+            sliderB0.maximum = 100;
+            sliderB0.value = 0;
+            sliderB0.height = "20px";
+            sliderB0.width = "100%";
+            sliderB0.color = "green";
+            sliderB0.background = "gray";
+            sliderB0.onValueChangedObservable.add(function(value) {
+                B0 = Math.round(value, 2);
+                valueB0.text = "B0 = " + B0;
+                // You can add any logic for B0 here
+            });
+            grid.addControl(sliderB0, 0, 2);
         
 
 
