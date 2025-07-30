@@ -1,390 +1,676 @@
 <!doctype html>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-        <title>Babylon.js sample code</title>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-        <!-- Babylon.js -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
-        <script src="https://assets.babylonjs.com/generated/Assets.js"></script>
-        <script src="https://cdn.babylonjs.com/recast.js"></script>
-        <script src="https://cdn.babylonjs.com/ammo.js"></script>
-        <script src="https://cdn.babylonjs.com/havok/HavokPhysics_umd.js"></script>
-        <script src="https://cdn.babylonjs.com/cannon.js"></script>
-        <script src="https://cdn.babylonjs.com/Oimo.js"></script>
-        <script src="https://cdn.babylonjs.com/earcut.min.js"></script>
-        <script src="https://cdn.babylonjs.com/babylon.js"></script>
-        <script src="https://cdn.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
-        <script src="https://cdn.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>
-        <script src="https://cdn.babylonjs.com/postProcessesLibrary/babylonjs.postProcess.min.js"></script>
-        <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.js"></script>
-        <script src="https://cdn.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
-        <script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>
-        <script src="https://cdn.babylonjs.com/addons/babylonjs.addons.min.js"></script>
-        <script src="https://cdn.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
+    <title>Magnetic resonance visualization</title>
 
-        <style>
-            html,
-            body {
-                overflow: hidden;
-                width: 100%;
-                height: 100%;
-                margin: 0;
-                padding: 0;
-            }
+    <!-- Babylon.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
+    <script src="https://assets.babylonjs.com/generated/Assets.js"></script>
+    <script src="https://cdn.babylonjs.com/recast.js"></script>
+    <script src="https://cdn.babylonjs.com/ammo.js"></script>
+    <script src="https://cdn.babylonjs.com/havok/HavokPhysics_umd.js"></script>
+    <script src="https://cdn.babylonjs.com/cannon.js"></script>
+    <script src="https://cdn.babylonjs.com/Oimo.js"></script>
+    <script src="https://cdn.babylonjs.com/earcut.min.js"></script>
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
+    <script src="https://cdn.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>
+    <script src="https://cdn.babylonjs.com/postProcessesLibrary/babylonjs.postProcess.min.js"></script>
+    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.js"></script>
+    <script src="https://cdn.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
+    <script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>
+    <script src="https://cdn.babylonjs.com/addons/babylonjs.addons.min.js"></script>
+    <script src="https://cdn.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
 
-            #renderCanvas {
-                width: 100%;
-                height: 100%;
-                touch-action: none;
-            }
+    <style>
+        html,
+        body {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
 
-            #canvasZone {
-                width: 100%;
-                height: 100%;
-            }
-        </style>
-    </head>
-    <body>
-        <div id="canvasZone"><canvas id="renderCanvas"></canvas></div>
-        <script>
-                    var canvas = document.getElementById("renderCanvas");
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
 
-                    var startRenderLoop = function (engine, canvas) {
-                        engine.runRenderLoop(function () {
-                            if (sceneToRender && sceneToRender.activeCamera) {
-                                sceneToRender.render();
-                            }
-                        });
-                    }
+        #canvasZone {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
 
-                    var engine = null;
+<body>
+    <div id="canvasZone"><canvas id="renderCanvas"></canvas></div>
+    <script>
+        var canvas = document.getElementById("renderCanvas");
+
+        var startRenderLoop = function (engine, canvas) {
+            engine.runRenderLoop(function () {
+                if (sceneToRender && sceneToRender.activeCamera) {
+                    sceneToRender.render();
+                }
+            });
+        }
+
+        var engine = null;
         var scene = null;
         var sceneToRender = null;
-        var createDefaultEngine = function() { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true,  disableWebGL2Support: false}); };
-        var createScene = function() {
-    var scene = new BABYLON.Scene(engine);
+        var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false }); };
+        var createScene = function () {
+            var scene = new BABYLON.Scene(engine);
 
-    var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 12, BABYLON.Vector3.Zero(), scene);
-    //var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
+            var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 12, BABYLON.Vector3.Zero(), scene);
+            //var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
 
-var light = new BABYLON.HemisphericLight("hemiLight", new BABYLON.Vector3(0, 1, 0), scene);
-//    new BABYLON.AxesViewer(scene, 1  );
+            var light = new BABYLON.HemisphericLight("hemiLight", new BABYLON.Vector3(0, 1, 0), scene);
+            //    new BABYLON.AxesViewer(scene, 1  );
+           
 
-var B1=0;
+            var atom = BABYLON.MeshBuilder.CreateSphere("Atom", { diameter: 0.17 }, scene);
 
-//var arrow = new BABYLON.TransformNode("arrow", scene);
-//var cylinder = BABYLON.MeshBuilder.CreateCylinder("cylinder", {height: 2, diameter: 0.05}, scene);
-//var cylinder2 = BABYLON.MeshBuilder.CreateCylinder("cylinder", {height: 0.1, diameter: 0.1,diameterTop: 0}, scene);
-//cylinder.position.y = 1;
-//cylinder.parent=arrow;
-//cylinder2.position.y = 2;
-//cylinder2.parent=arrow;
+            const ArrowCurve = (ep) => {
+                const path = [];
+                const len = ep.length();
+                const head = ep.scale((len - 0.1) / len);
+                path.push(new BABYLON.Vector3(0, 0, 0))
+                path.push(head),
+                    path.push(head),
+                    path.push(head),
+                    path.push(head),
+                    path.push(ep)
+                return path;
+            };
 
-var atom = BABYLON.MeshBuilder.CreateSphere("Atom", {diameter: 0.3}, scene);
+            const AxisCurve = (ep) => {
+                const path = [];
+                const len = ep.length();
+                const head = ep.scale((len - 0.1) / len);                
+                path.push(new BABYLON.Vector3(-ep.x,-ep.y,-ep.z))
+                path.push(head),
+                    path.push(head),
+                    path.push(head),
+                    path.push(head),
+                    path.push(ep)
+                return path;
+            };
 
-const ArrowCurve = (ep) => {
-        const path = [];
-        const len = ep.length();        
-        const head=ep.scale((len-0.1)/len);
-        path.push(new BABYLON.Vector3(0, 0, 0 ))
-        path.push(head),
-        path.push(head),
-        path.push(head),
-        path.push(head),         
-        path.push(ep)
-        return path;
-    };
-
-
-
-
-
-const radiusChange = (index, distance) => {
-    var radius;
-    if (index<3)  
-    { 
-      radius = 0.03;
-    }  else  if (index<5) {
-      radius = 0.07;
-    } else {
-        radius = 0;
-    }
-    return radius;
-};
-
-ve=new BABYLON.Vector3(1., 1.1, 0);
-
-let tube = BABYLON.MeshBuilder.CreateTube("tube", {path: ArrowCurve(ve), radiusFunction: radiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true}, scene);
-
-var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:1000.0}, scene);
-
-var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
-
-skyboxMaterial.backFaceCulling = false;
-skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("textures/skybox", scene);
-skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
-skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0); skybox.material = skyboxMaterial;
-
-
-    // This targets the camera to scene origin
-    camera.setTarget(BABYLON.Vector3.Zero());
-
-
-    // This attaches the camera to the canvas
-    camera.attachControl(canvas, true);
-
-    camera.lowerRadiusLimit = 5;// (debugNode as BABYLON.ArcRotateCamera)
-    camera.upperRadiusLimit = 100;// (debugNode as BABYLON.ArcRotateCamera)
-    camera.panningSensibility = 2;// (debugNode as BABYLON.ArcRotateCamera)
-    camera.speed = 1;// (debugNode as BABYLON.ArcRotateCamera)
-    camera.inertia = 0.3;// (debugNode as BABYLON.ArcRotateCamera)
-    camera.angularSensibilityX = 100;// (debugNode as BABYLON.ArcRotateCamera)
-    camera.angularSensibilityY = 100;// (debugNode as BABYLON.ArcRotateCamera)
-
-let speed = 0;
-
- // GUI
-    var gui  = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-    
-
-        const grid = new BABYLON.GUI.Grid();
-        grid.addColumnDefinition(50, true);  // Column 1: fixed width
-        grid.addColumnDefinition(50, true);        // Column 2: relative width
-        grid.addColumnDefinition(1);  // Column 3: fixed width
-        grid.addColumnDefinition(100 , true); 
-        grid.addRowDefinition(25, true);
-        grid.addRowDefinition(25, true);
-        grid.addRowDefinition(25, true);
-        
-        gui.addControl(grid);
-grid.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
-        grid.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
-        grid.width = "80%";
-        grid.height = "150px";
-
-        const grid2 = new BABYLON.GUI.Grid();
-        grid2.addColumnDefinition(50, true);  // Column 1: fixed width
-        grid2.addColumnDefinition(50, true);        // Column 2: relative width
-        grid2.addRowDefinition(25, true);
-        grid2.addRowDefinition(25, true);
-        //gui.addControl(grid2);
-        grid.addControl(grid2, 2, 2);
-
-            // Checkbox
-            const checkbox1 = new BABYLON.GUI.Checkbox();
-            checkbox1.width = "20px";
-            checkbox1.height = "20px";
-            checkbox1.color = "white";
-            checkbox1.isChecked = false;
-            grid2.addControl(checkbox1, 0, 0);
-
-            const checkbox2 = new BABYLON.GUI.Checkbox();
-            checkbox2.width = "20px";
-            checkbox2.height = "20px";
-            checkbox2.color = "white";
-            checkbox2.isChecked = false;
-            checkbox2.onIsCheckedChangedObservable.add(function(value) {
-                if (sliderB1 && value) {
-                    slider.color = "green";                    
+            const radiusChange = (index, distance) => {
+                var radius;
+                if (index < 3) {
+                    radius = 0.03;
+                } else if (index < 5) {
+                    radius = 0.06;
+                } else {
+                    radius = 0;
                 }
-                if (sliderB1 && !value) {
-                    slider.color = "gray";                    
+                return radius;
+            };
+
+            const smallradiusChange = (index, distance) => {
+                var radius;
+                if (index < 3) {
+                    radius = 0.015;
+                } else if (index < 5) {
+                    radius = 0.035;
+                } else {
+                    radius = 0;
                 }
-                
-            });
-            
-            grid.addControl(checkbox2, 1, 0);
+                return radius;
+            };
 
             
+/*
+            var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", { size: 1000.0 }, scene);
+
+            var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+
+            skyboxMaterial.backFaceCulling = false;
+            skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("textures/skybox", scene);
+            skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+            skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+            skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0); skybox.material = skyboxMaterial;
+*/
+
+            // This targets the camera to scene origin
+            camera.setTarget(BABYLON.Vector3.Zero());
+
+
+            // This attaches the camera to the canvas
+            camera.attachControl(canvas, true);
+
+            camera.lowerRadiusLimit = 5;// (debugNode as BABYLON.ArcRotateCamera)
+            camera.upperRadiusLimit = 100;// (debugNode as BABYLON.ArcRotateCamera)
+            camera.panningSensibility = 2;// (debugNode as BABYLON.ArcRotateCamera)
+            camera.speed = 1;// (debugNode as BABYLON.ArcRotateCamera)
+            camera.inertia = 0.3;// (debugNode as BABYLON.ArcRotateCamera)
+            camera.angularSensibilityX = 100;// (debugNode as BABYLON.ArcRotateCamera)
+            camera.angularSensibilityY = 100;// (debugNode as BABYLON.ArcRotateCamera)
+
+            let B0s = 0;
+            let B1s = 0;
+            let B0d = 0; // direction in degrees
+            let Fs = 0;            
+            let B1a = 0;
+            let showaxis = true;
+            let larmorth = false;
+
+            // GUI
+            var gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI"); 
+
+            const grid = new BABYLON.GUI.Grid();
+            grid.addColumnDefinition(2);  // Column 1: fixed width
+            grid.addColumnDefinition(1);  // Column 3: fixed width            
+            grid.addRowDefinition(105, true);
+            grid.addRowDefinition(50, true);
+//            grid.addRowDefinition(25, true);
+
+            gui.addControl(grid);
+            grid.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+            grid.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+            grid.width = "95%";
+            grid.height = "200px";
+            grid.paddingLeft = "10px";
+            grid.paddingRight = "10px";
+            grid.paddingTop = "10px";
+            grid.paddingBottom = "10px";
+
+            const grid2 = new BABYLON.GUI.Grid();
+            grid2.addColumnDefinition(30, true);  // Column 1: fixed width
+            grid2.addColumnDefinition(100, true);        // Column 2: relative width
+            grid2.addColumnDefinition(1);  // Column 3: fixed width                        
+            grid2.addColumnDefinition(100, true);        // Column 2: relative width
+            grid2.addColumnDefinition(1);  // Column 3: fixed width                        
+            grid2.addRowDefinition(35, true);            
+            grid2.addRowDefinition(35, true);
+            grid2.addRowDefinition(35, true);
+            grid2.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+            grid2.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+            grid2.width = "100%";
+//            grid2.height = "75px";
+     
+            grid.addControl(grid2, 0,0);
+            
+            // B0 controls ************************************************************
             const labelB0 = new BABYLON.GUI.TextBlock();
-            labelB0.text = `B0`;
+            const labelB0d = new BABYLON.GUI.TextBlock();
+            const checkbox1 = new BABYLON.GUI.Checkbox();
+            const sliderB0 = new BABYLON.GUI.Slider();
+            const sliderB0d = new BABYLON.GUI.Slider();
+
+            labelB0.text = `B0 f = 0`;
             labelB0.color = "white";
             labelB0.fontSize = 18;
-            labelB0.height = "30px";
+            labelB0.height = "25px";
             labelB0.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-            grid.addControl(labelB0, 0, 1);
+            
+            checkbox1.width = "20px";
+            checkbox1.height = "20px";
+            checkbox1.color = "green";
+            checkbox1.background = "gray";
+            checkbox1.isChecked = false;
+            checkbox1.onIsCheckedChangedObservable.add(function (value) {
+                if (sliderB0) {
+                    sliderB0.isReadOnly = !value;
+                    sliderB0.alpha = value ? 1 : 0.4;
+                    B0s = value ? sliderB0.value : 0;
+                    labelB0.text = "B0 f = " + B0s;
+                    labelB0.color = value ? "white" : "gray";
+                }
+                if (sliderB0d) {
+                    sliderB0d.isReadOnly = !value;
+                    sliderB0d.alpha = value ? 1 : 0.4;
+                    //B0d = value ? sliderB0d.value : 0;
+                    //labelB0d.text = "dir = " + B0d;
+                    labelB0d.color = value ? "white" : "gray";
+                }
+            });
+            
+            sliderB0.minimum = -50;
+            sliderB0.maximum = 50;
+            sliderB0.value = B0s;
+            sliderB0.step = 1;
+            sliderB0.height = "20px";
+            sliderB0.width = "95%";
+            sliderB0.color = "gray";
+            sliderB0.background = "gray";
+            sliderB0.thumbWidth = "4px";
+            sliderB0.isReadOnly = true;
+            sliderB0.alpha = 0.4;
+            sliderB0.onValueChangedObservable.add(function (value) {
+                B0s = Math.round(value, 2);
+                labelB0.text = "B0 f = " + B0s;
+                // You can add any logic for B0 here
+            });
+            
 
-            const valueB0 = new BABYLON.GUI.TextBlock();
-            valueB0.text = `0`;
-            valueB0.color = "white";
-            valueB0.fontSize = 18;
-            valueB0.height = "30px";
-            valueB0.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-            grid.addControl(valueB0, 0, 3);
 
+            labelB0d.text = `dir = 0`;
+            labelB0d.color = "white";
+            labelB0d.fontSize = 18;
+            labelB0d.height = "25px";
+            labelB0d.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+
+            sliderB0d.minimum = 0;
+            sliderB0d.maximum = 180;
+            sliderB0d.value = 0;
+            sliderB0d.step = 1;
+            sliderB0d.height = "20px";
+            sliderB0d.width = "95%";
+            sliderB0d.color = "gray";
+            sliderB0d.background = "gray";
+            sliderB0d.thumbWidth = "4px";
+            sliderB0d.isReadOnly = true;
+            sliderB0d.alpha = 0.4;
+            sliderB0d.onValueChangedObservable.add(function (value) {
+                B0d = Math.round(value, 2);
+                labelB0d.text = "dir = " + B0d;
+                // You can add any logic for B0 here
+            });
+
+            grid2.addControl(checkbox1, 0,0);
+            grid2.addControl(labelB0, 0, 1);
+            grid2.addControl(sliderB0, 0, 2);
+            grid2.addControl(labelB0d, 0, 3);
+            grid2.addControl(sliderB0d, 0, 4);
+            
+          
+
+            // B1 controls ************************************************************
+
+            const checkbox2 = new BABYLON.GUI.Checkbox();
             const labelB1 = new BABYLON.GUI.TextBlock();
-            labelB1.text = `B1`;
+            const sliderB1 = new BABYLON.GUI.Slider();            
+            const labelB1a = new BABYLON.GUI.TextBlock();
+            const sliderB1a = new BABYLON.GUI.Slider();            
+            
+            // B1a amplitude label
+            labelB1a.text = `ampl = 0`;
+            labelB1a.color = "gray";
+            labelB1a.fontSize = 18;
+            labelB1a.height = "30px";
+            labelB1a.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+
+            // B1a amplitude slider
+            sliderB1a.minimum = 0;
+            sliderB1a.maximum = 20;
+            sliderB1a.value = 10;
+            sliderB1a.height = "20px";
+            sliderB1a.width = "95%";
+            sliderB1a.color = "gray";
+            sliderB1a.step = 1;
+            sliderB1a.thumbWidth = "4px";
+            sliderB1a.background = "gray";
+            sliderB1a.isReadOnly = true;
+            sliderB1a.alpha = 0.4;
+            sliderB1a.onValueChangedObservable.add(function (value) {
+                B1a = Math.round(value, 2);
+                labelB1a.text = "ampl = " + B1a;
+            });
+
+
+            
+            checkbox2.width = "20px";
+            checkbox2.height = "20px";
+            checkbox2.color = "green";
+            checkbox2.background = "gray";            
+            checkbox2.isChecked = false;
+            checkbox2.onIsCheckedChangedObservable.add(function (value) {
+                if (sliderB1) {
+                    sliderB1.isReadOnly = !value;
+                    sliderB1.alpha = value ? 1 : 0.4;
+                    labelB1.text = value ? "B1 f = " + B1s : "B1 f = 0";
+                    labelB1.color = value ? "white" : "gray";
+                }
+                if (sliderB1a) {
+                    sliderB1a.isReadOnly = !value;
+                    B1a = value ? sliderB1a.value : 0;
+                    labelB1a.text = "ampl = " + B1a;
+                    sliderB1a.alpha = value ? 1 : 0.4;
+                    labelB1a.color = value ? "white" : "gray";
+                }
+            });
+            
+            labelB1.text = `B1 f = 0`;
             labelB1.color = "white";
             labelB1.fontSize = 18;
             labelB1.height = "30px";
             labelB1.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-            grid.addControl(labelB1, 1, 1);
 
-            const valueB1 = new BABYLON.GUI.TextBlock();
-            valueB1.text = `0`;
-            valueB1.color = "white";
-            valueB1.fontSize = 18;
-            valueB1.height = "30px";
-            valueB1.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-            grid.addControl(valueB1, 1, 3);
-            
-            
-            // Slider for B1
-            const sliderB1 = new BABYLON.GUI.Slider();
-            sliderB1.minimum = -100;
-            sliderB1.maximum = 100;
+            sliderB1.minimum = -50;
+            sliderB1.maximum = 50;
             sliderB1.value = 0;
             sliderB1.height = "20px";
-            sliderB1.width = "100%";
-            sliderB1.color = "green";
+            sliderB1.width = "95%";
+            sliderB1.color = "gray";
+            sliderB1.step = 1;
+            sliderB1.thumbWidth = "4px";
             sliderB1.background = "gray";
-            sliderB1.onValueChangedObservable.add(function(value) {
-               B1 = Math.round(value, 2);
-               valueB1.text = "f = " + B1;
-               speed=B1*0.01;               
-             });
-            grid.addControl(sliderB1, 1, 2);
+            sliderB1.isReadOnly = true;
+            sliderB1.alpha = 0.4;
 
-            // Slider for B0
-            const sliderB0 = new BABYLON.GUI.Slider();
-            sliderB0.minimum = -100;
-            sliderB0.maximum = 100;
-            sliderB0.value = 0;
-            sliderB0.height = "20px";
-            sliderB0.width = "100%";
-            sliderB0.color = "green";
-            sliderB0.background = "gray";
-            sliderB0.onValueChangedObservable.add(function(value) {
-                B0 = Math.round(value, 2);
-                valueB0.text = "B0 = " + B0;
-                // You can add any logic for B0 here
+            sliderB1.onValueChangedObservable.add(function (value) {
+                B1s = Math.round(value, 2);
+                labelB1.text = "B1 f = " + B1s;                                
             });
-            grid.addControl(sliderB0, 0, 2);
-        
+
+            grid2.addControl(checkbox2, 1, 0);
+            grid2.addControl(labelB1, 1, 1);
+            grid2.addControl(sliderB1, 1, 2);            
+            grid2.addControl(labelB1a, 1, 3);
+            grid2.addControl(sliderB1a, 1, 4);
+            
 
 
-/*
+            // Frame controls ************************************************************
 
-    var panel = new BABYLON.GUI.StackPanel();
+            
+            const labelF = new BABYLON.GUI.TextBlock();
+            const sliderF = new BABYLON.GUI.Slider();
 
-    panel.hight = "220px";
-    panel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
-    panel.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
-    advancedTexture.addControl(panel);
+            const checkboxF = new BABYLON.GUI.Checkbox();
+            checkboxF.width = "20px";
+            checkboxF.height = "20px";
+            checkboxF.color = "white";
+            checkboxF.background = "gray";
+            checkboxF.isChecked = true;
+            checkboxF.onIsCheckedChangedObservable.add(function (value) {
+                showaxis = value;
+            });
+            grid2.addControl(checkboxF, 2, 0);
 
+            labelF.text = `Frame f = 0`;
+            labelF.color = "white";
+            labelF.fontSize = 18;
+            labelF.height = "30px";
+            labelF.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
 
-var slider = new BABYLON.GUI.Slider();
-    slider.minimum = 0;
-    slider.maximum = 2 * Math.PI;
-    slider.value = 0;
-    slider.height = "20px";
-    slider.width = "400px";
-    slider.onValueChangedObservable.add(function(value) {
-        header.text = "Y-rotation: " + (BABYLON.Tools.ToDegrees(value) | 0) + " deg";        
-        speed=value/100.;
-    });
-    panel.addControl(slider); 
+            sliderF.minimum = -50;
+            sliderF.maximum = 50;
+            sliderF.value = 0;
+            sliderF.height = "20px";
+            sliderF.width = "95%";
+            sliderF.color = "gray";
+            sliderF.step = 1;
+            sliderF.thumbWidth = "4px";
+            sliderF.background = "gray";
+//            sliderF.isReadOnly = true;
+//            sliderF.alpha = 0.4;
+            sliderF.onValueChangedObservable.add(function (value) {
+                Fs = Math.round(value, 2);
+                labelF.text = `Frame f = ` + Fs;                                
+            });
 
-    var header = new BABYLON.GUI.TextBlock();
-    header.text = "Y-rotation: 0 deg";
-    header.height = "30px";
-    header.color = "white";
-    panel.addControl(header); 
+            const checkboxL = new BABYLON.GUI.Checkbox();
+            checkboxL.width = "20px";
+            checkboxL.height = "20px";
+            checkboxL.color = "white";
+            checkboxL.background = "gray";
+            checkboxL.isChecked = false;
+            checkboxL.onIsCheckedChangedObservable.add(function (value) {
+                larmorth = value;
+            });
+            
+            var panelL = new BABYLON.GUI.StackPanel();
+            panelL.isVertical = false;
+            const labelL = new BABYLON.GUI.TextBlock();
+            labelL.text = `  Larmor theorem`;
+            labelL.color = "white";
+            labelL.fontSize = 18;
+            labelL.height = "30px";
+            labelL.width = "180px";
+            labelL.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
 
-    var slider = new BABYLON.GUI.Slider();
-    slider.minimum = 0;
-    slider.maximum = 2 * Math.PI;
-    slider.value = 0;
-    slider.height = "20px";
-    slider.width = "400px";
-    slider.onValueChangedObservable.add(function(value) {
-        header.text = "Y-rotation: " + (BABYLON.Tools.ToDegrees(value) | 0) + " deg";        
-        speed=value/100.;
-    });
-    panel.addControl(slider); 
+            grid2.addControl(checkboxF, 2, 0);
+            grid2.addControl(labelF, 2, 1);
+            grid2.addControl(sliderF, 2, 2);
+            panelL.addControl(checkboxL);
+            panelL.addControl(labelL);
+            grid2.addControl(panelL, 2, 4);
 
-var checkbox = new BABYLON.GUI.Checkbox();
-    checkbox.width = "20px";
-    checkbox.height = "20px";
-    checkbox.isChecked = true;
-    checkbox.color = "green";
-    checkbox.onIsCheckedChangedObservable.add(function(value) {
-        if (skull) {
-            skull.useVertexColors = value;
-        }
-    });
-    panel.addControl(checkbox);   
+var bpanel = new BABYLON.GUI.StackPanel();
+            bpanel.hight = "220px";
+            bpanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+            bpanel.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+            grid.addControl(bpanel, 1, 0 );
+        var button1 = BABYLON.GUI.Button.CreateSimpleButton("but1", "Reset Z");
+                
+                button1.verticalAlignment = 1;// (debugNode as BABYLON.Unknown)
+                button1.width = "150px";
+                button1.height = "25px";
 
-    var header2 = new BABYLON.GUI.TextBlock();
-    header2.text = "use vertex colors";
-    header2.width = "180px";
-    header2.marginLeft = "5px";
-    header2.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-    header2.color = "white";
-    panel.addControl(header2);     
+                button1.color = "gray";
+                button1.cornerRadius = 0    ;
+                button1.background = "green";
+                button1.onPointerUpObservable.add(function() {
+                    button1.textBlock.text  = sliderB0;                    
+                });
+                bpanel.addControl(button1); 
+
+    var line = new BABYLON.GUI.MultiLine();
+    line.add(sliderB0);
+    line.add(sliderF);
+    line.lineWidth = 1;
+    line.color = "gray";
+    line.zIndex = 1;
+    gui.addControl(line);
     
-    var button1 = BABYLON.GUI.Button.CreateSimpleButton("but1", length);
+let y = sliderB0;
+let x = sliderB0;
+
+            
+            
     
-    button1.verticalAlignment = 1;// (debugNode as BABYLON.Unknown)
-    button1.width = "550px";
-    button1.height = "50px";
-    button1.color = "white";
-    button1.cornerRadius = 0    ;
-    button1.background = "green";
-    button1.onPointerUpObservable.add(function() {
-        alert("you did it!");
-    });
-    panel.addControl(button1); 
-*/
+            
 
- let angle = 0;
-    scene.registerBeforeRender(function(){
-        // arrow.rotation.z = angle;       
-        bf = new BABYLON.Vector3(0,speed,0);
-        dv = ve.cross(bf);
-        ve.addInPlace(dv);        
-        tube = BABYLON.MeshBuilder.CreateTube("tube", {path: ArrowCurve(ve),  radiusFunction: radiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE,instance: tube, updatable:true} ); 
-    })
-
-// Finally create the motion blur effect :)
-    //var mb = new BABYLON.MotionBlurPostProcess('mb', scene, 1, camera);
-
-
-    return scene;
-};
-
-                window.initFunction = async function() {
-                    
-                    
-                    
-                    var asyncEngineCreation = async function() {
-                        try {
-                        return createDefaultEngine();
-                        } catch(e) {
-                        console.log("the available createEngine function failed. Creating the default engine instead");
-                        return createDefaultEngine();
-                        }
+            /*
+            
+                var panel = new BABYLON.GUI.StackPanel();
+            
+                panel.hight = "220px";
+                panel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+                panel.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+                advancedTexture.addControl(panel);
+            
+            
+            var slider = new BABYLON.GUI.Slider();
+                slider.minimum = 0;
+                slider.maximum = 2 * Math.PI;
+                slider.value = 0;
+                slider.height = "20px";
+                slider.width = "400px";
+                slider.onValueChangedObservable.add(function(value) {
+                    header.text = "Y-rotation: " + (BABYLON.Tools.ToDegrees(value) | 0) + " deg";        
+                    speed=value/100.;
+                });
+                panel.addControl(slider); 
+            
+                var header = new BABYLON.GUI.TextBlock();
+                header.text = "Y-rotation: 0 deg";
+                header.height = "30px";
+                header.color = "white";
+                panel.addControl(header); 
+            
+                var slider = new BABYLON.GUI.Slider();
+                slider.minimum = 0;
+                slider.maximum = 2 * Math.PI;
+                slider.value = 0;
+                slider.height = "20px";
+                slider.width = "400px";
+                slider.onValueChangedObservable.add(function(value) {
+                    header.text = "Y-rotation: " + (BABYLON.Tools.ToDegrees(value) | 0) + " deg";        
+                    speed=value/100.;
+                });
+                panel.addControl(slider); 
+            
+            var checkbox = new BABYLON.GUI.Checkbox();
+                checkbox.width = "20px";
+                checkbox.height = "20px";
+                checkbox.isChecked = true;
+                checkbox.color = "green";
+                checkbox.onIsCheckedChangedObservable.add(function(value) {
+                    if (skull) {
+                        skull.useVertexColors = value;
                     }
+                });
+                panel.addControl(checkbox);   
+            
+                var header2 = new BABYLON.GUI.TextBlock();
+                header2.text = "use vertex colors";
+                header2.width = "180px";
+                header2.marginLeft = "5px";
+                header2.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+                header2.color = "white";
+                panel.addControl(header2);     
+                
+                var button1 = BABYLON.GUI.Button.CreateSimpleButton("but1", length);
+                
+                button1.verticalAlignment = 1;// (debugNode as BABYLON.Unknown)
+                button1.width = "550px";
+                button1.height = "50px";
+                button1.color = "white";
+                button1.cornerRadius = 0    ;
+                button1.background = "green";
+                button1.onPointerUpObservable.add(function() {
+                    alert("you did it!");
+                });
+                panel.addControl(button1); 
+            */
 
-                    window.engine = await asyncEngineCreation();
+
+            B0 = new BABYLON.Vector3(0., 1, 0);
+            B1 = new BABYLON.Vector3(0., 0, 0);
+
+            mag = new BABYLON.Vector3(1., 1.1, 0);
+            let ax_x = BABYLON.MeshBuilder.CreateTube("x axis", { path: AxisCurve(new BABYLON.Vector3(2., 0, 0)), radiusFunction: smallradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true }, scene);            
+            //let ax_y = BABYLON.MeshBuilder.CreateTube("y axis", { path: AxisCurve(new BABYLON.Vector3(0, 2, 0)), radiusFunction: smallradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true }, scene);            
+            let ax_z = BABYLON.MeshBuilder.CreateTube("z axis", { path: AxisCurve(new BABYLON.Vector3(0, 0, 2)), radiusFunction: smallradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true }, scene);            
+
+            let mag_a = BABYLON.MeshBuilder.CreateTube("magnetization", { path: ArrowCurve(mag), radiusFunction: radiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true }, scene);            
+            let mag_mat = new BABYLON.StandardMaterial("Magmat", scene);
+            mag_mat.diffuseColor = new BABYLON.Color3(1,1, 0); // green
+            mag_a.material = mag_mat;
+
+
+            let B0_a = BABYLON.MeshBuilder.CreateTube("B0", { path: ArrowCurve(B0), radiusFunction: radiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true }, scene);
+            let B1_a = BABYLON.MeshBuilder.CreateTube("B1", { path: ArrowCurve(B1), radiusFunction: radiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true }, scene);
+            let B_mat = new BABYLON.StandardMaterial("B0Mat", scene);
+            B_mat.diffuseColor = new BABYLON.Color3(0, 0.8, 0); // green
+            B0_a.material = B_mat;
+            B1_a.material = B_mat;
+
+            let angle = 0.000;
+            let pump = 0.000;
+            let dt=0.04
+            let len=1000;
+            let relax=0.0;
+            let rfphase=0.0;
+            let framephase=0.0;
+
+            scene.registerBeforeRender(function () {
+
+
+                // B0d is in degrees, convert to radians
+                const B0dRad = B0d * Math.PI / 180;
+                // B0s/20 is the magnitude
+                const B0mag = B0s / 20.;
+                // Rotate B0 around z-axis by B0d
+                B0 = new BABYLON.Vector3(
+                    B0mag * Math.sin(B0dRad),
+                    B0mag * Math.cos(B0dRad),
+                    0
+                );
+
+                let B = new BABYLON.Vector3;                
+                
+                B0L = new BABYLON.Vector3( B0.x , B0.y + larmorth* Fs / 20., B0.z );
+                
+
+                for (let i = 0; i < len; i++) {
+                    rfphase += B1s * dt / len / 20.;
+                    framephase += Fs * dt / len / 20.;
                     
-                    const engineOptions = window.engine.getCreationOptions?.();
-                    if (!engineOptions || engineOptions.audioEngine !== false) {
-                        
-                    }
-        if (!engine) throw 'engine should not be null.';
-        startRenderLoop(engine, canvas);
-        window.scene = createScene();};
-        initFunction().then(() => {sceneToRender = scene
-                    });
+                    B1 = new BABYLON.Vector3( B1a/20. * Math.sin(rfphase), 0, B1a/20. * Math.cos(rfphase) );
+                    
+                    B.x = B0.x + B1.x;
+                    B.y = B0.y + B1.y;
+                    B.z = B0.z + B1.z;
+                    
+                    mag.x += dt / len * (-mag.y * B.z + mag.z * B.y - relax * mag.x + pump * (0 - mag.x));
+                    mag.y += dt / len * (-mag.z * B.x + mag.x * B.z - relax * mag.y + pump * (0 - mag.y));
+                    mag.z += dt / len * (-mag.x * B.y + mag.y * B.x - relax * mag.z + pump * (0 - mag.z));
+                }
+                                
+                mag_a = BABYLON.MeshBuilder.CreateTube("magnetization", { path: ArrowCurve(mag), radiusFunction: radiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, instance: mag_a, updatable: true });                
+                B0_a = BABYLON.MeshBuilder.CreateTube("B0", { path: ArrowCurve(B0L), radiusFunction: radiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, instance: B0_a, updatable: true });
+                B1_a = BABYLON.MeshBuilder.CreateTube("B1", { path: ArrowCurve(B1), radiusFunction: radiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, instance: B1_a, updatable: true });
 
-                    // Resize
-                    window.addEventListener("resize", function () {
-                        engine.resize();
-                    });
-        </script>
-    </body>
+                mag_a.rotation.y=framephase;
+                B0_a.rotation.y=framephase;
+                B1_a.rotation.y=framephase;
+
+                ax_x.rotation.y=framephase;                
+                ax_z.rotation.y=framephase;
+                
+                
+                if (showaxis) {
+                    ax_x.visibility = 1;
+                    ax_z.visibility = 1;
+                } else {
+                    ax_x.visibility = 0;
+                    ax_z.visibility = 0;
+                }
+
+
+            })
+
+            // Finally create the motion blur effect :)
+            //var mb = new BABYLON.MotionBlurPostProcess('mb', scene, 1, camera);
+
+
+            return scene;
+        };
+
+        window.initFunction = async function () {
+
+
+
+            var asyncEngineCreation = async function () {
+                try {
+                    return createDefaultEngine();
+                } catch (e) {
+                    console.log("the available createEngine function failed. Creating the default engine instead");
+                    return createDefaultEngine();
+                }
+            }
+
+            window.engine = await asyncEngineCreation();
+
+            const engineOptions = window.engine.getCreationOptions?.();
+            if (!engineOptions || engineOptions.audioEngine !== false) {
+
+            }
+            if (!engine) throw 'engine should not be null.';
+            startRenderLoop(engine, canvas);
+            window.scene = createScene();
+        };
+        initFunction().then(() => {
+            sceneToRender = scene
+        });
+
+        // Resize
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    </script>
+</body>
+
 </html>
