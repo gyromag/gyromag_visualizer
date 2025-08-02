@@ -185,6 +185,19 @@
                 return radius;
             };
 
+            const MagPradiusChange = (index, distance) => {
+                var radius;
+                if (index < 3) {
+                    radius = 0.023;
+                } else if (index < 5) {
+                    radius = 0.046;
+                } else {
+                    radius = 0;
+                }
+                return radius;
+            };
+
+
             const smallradiusChange = (index, distance) => {
                 var radius;
                 if (index < 3) {
@@ -245,8 +258,14 @@
             let larmorth = typeof window.initialValues.larmorth === "boolean" ? window.initialValues.larmorth : false;
 
             let mag = new BABYLON.Vector3(1., 1.1, 0);
+
+
+
+            let rfvec = new BABYLON.Vector3(0.3, 0, 0); // Radiofrequency vector
             // GUI
             var gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+
+            let pulse=0;            
 
             let histPoints = [];
             let histcolors = [];
@@ -430,16 +449,13 @@
 
             const B1_active = (value) => {
                 B1act = value;
-                if (sliderB1) {                    
-                    sliderB1.alpha = value ? 1 : 0.4;
-                    valueB1.text = "R = " + B1s.toFixed(0);
-                    valueB1.color = value ? "white" : "gray";
-                }
-                if (sliderB1a) {                                        
-                    valueB1a.text = "ampl = " + B1a.toFixed(1);
-                    sliderB1a.alpha = value ? 1 : 0.4;
-                    valueB1a.color = value ? "white" : "gray";
-                }
+                checkbox2.isChecked = value;
+                sliderB1.alpha = value ? 1 : 0.4;
+                valueB1.text = "R = " + B1s.toFixed(0);
+                valueB1.color = value ? "white" : "gray";
+                valueB1a.text = "ampl = " + B1a.toFixed(1);
+                sliderB1a.alpha = value ? 1 : 0.4;
+                valueB1a.color = value ? "white" : "gray";               
             }
 
             const B1_amplitude_change = (value) => {
@@ -737,29 +753,48 @@
 
  
             const checkboxProj = new BABYLON.GUI.Checkbox();
+            let showAxProj = false;
             checkboxProj.width = "20px";
             checkboxProj.height = "20px";
             checkboxProj.color = "white";
             checkboxProj.background = "gray";
-            checkboxProj.isChecked = true;
-            let showProjistory = true;
+            checkboxProj.isChecked = showAxProj;
+            
             checkboxProj.onIsCheckedChangedObservable.add(function (value) {
-                showProjistory = value;
-                hist.visibility = value ? 1 : 0;
-                if (value) {
-                    resethist();
-                }
+                showAxProj = value;
             });
 
             const labelProj = new BABYLON.GUI.TextBlock();
-            labelProj.text = `  Projections`;
+            labelProj.text = `  Axis projections`;
             labelProj.color = "white";
             labelProj.fontSize = 18;
             labelProj.height = "30px";
-            labelProj.width = "118px";
+            labelProj.width = "150px";
             labelProj.paddingLeft = "10px";            
             labelProj.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
             labelProj.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
+
+
+            const checkboxRFPhase = new BABYLON.GUI.Checkbox();
+            let showRFPhase = false
+            checkboxRFPhase.width = "20px";
+            checkboxRFPhase.height = "20px";
+            checkboxRFPhase.color = "white";
+            checkboxRFPhase.background = "gray";
+            checkboxRFPhase.isChecked = showRFPhase;            
+            checkboxRFPhase.onIsCheckedChangedObservable.add(function (value) {
+                showRFPhase = value;
+            });
+
+            const labelRFPhase = new BABYLON.GUI.TextBlock();
+            labelRFPhase.text = `  RF Phase`;
+            labelRFPhase.color = "white";
+            labelRFPhase.fontSize = 18;
+            labelRFPhase.height = "30px";
+            labelRFPhase.width = "118px";
+            labelRFPhase.paddingLeft = "10px";            
+            labelRFPhase.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+            labelRFPhase.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
 
 
 
@@ -786,6 +821,9 @@
             panelH.addControl(checkboxH);
             panelH.addControl(labelProj);
             panelH.addControl(checkboxProj);
+            panelH.addControl(labelRFPhase);
+            panelH.addControl(checkboxRFPhase);
+            
 
 
             Masaerpanel.addControl(panelH);
@@ -840,6 +878,23 @@
                 resethist();
             });
             
+
+            var buttonReset0 = BABYLON.GUI.Button.CreateSimpleButton("butMatchFrame", "Rest 0");
+            buttonReset0.verticalAlignment = 1;
+            buttonReset0.width = "100px";
+            buttonReset0.height = "28px";
+            buttonReset0.paddingLeft = "5px";
+            buttonReset0.paddingRight = "5px";
+            buttonReset0.color = "black";
+            buttonReset0.cornerRadius = 4;
+            buttonReset0.background = "#e0e0e0";
+            buttonReset0.onPointerUpObservable.add(function () {
+                
+                mag = new BABYLON.Vector3(0., 0., 0.);   
+                resethist();             
+            });
+
+
             var buttonMatchFrame = BABYLON.GUI.Button.CreateSimpleButton("butMatchFrame", "rot. Frame");
             buttonMatchFrame.verticalAlignment = 1;
             buttonMatchFrame.width = "120px";
@@ -858,7 +913,7 @@
                 }
             });
             
-            var buttonB0rev = BABYLON.GUI.Button.CreateSimpleButton("butMatchFrame", "reverse B0");
+            var buttonB0rev = BABYLON.GUI.Button.CreateSimpleButton("butRerverse", "reverse B0");
             buttonB0rev.verticalAlignment = 1;
             buttonB0rev.width = "120px";
             buttonB0rev.height = "28px";
@@ -876,7 +931,26 @@
                 }
                 
             });
+
             
+            var buttonPiPulse = BABYLON.GUI.Button.CreateSimpleButton("butPiPulse", "pi Pulse");
+            buttonPiPulse.verticalAlignment = 1;
+            buttonPiPulse.width = "120px";
+            buttonPiPulse.height = "28px";
+            buttonPiPulse.paddingLeft = "5px";
+            buttonPiPulse.paddingRight = "5px";
+            buttonPiPulse.color = "black";
+            buttonPiPulse.cornerRadius = 4;
+            buttonPiPulse.background = "#e0e0e0";
+            buttonPiPulse.onPointerUpObservable.add(function () {
+                if(pulse==0)
+                {   
+                    pulse = Math.PI/2.;
+                    B1_active(true);
+                }                 
+            });
+
+
             var panelB = new BABYLON.GUI.StackPanel();
             panelB.height = "28px";
             panelB.width = "100%"; 
@@ -885,8 +959,10 @@
             panelB.addControl(buttonPause);
             panelB.addControl(button1);  
             panelB.addControl(button2);
+            panelB.addControl(buttonReset0);            
             panelB.addControl(buttonMatchFrame);
             panelB.addControl(buttonB0rev);          
+            panelB.addControl(buttonPiPulse);      
             Masaerpanel.addControl(panelB);
 
             
@@ -910,10 +986,20 @@
             ax_x.material = axisMat;
             ax_z.material = axisMat;
 
+            let rf_a = BABYLON.MeshBuilder.CreateTube("rf phase", { path: ArrowCurve(rfvec), radiusFunction: smallradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true }, scene);
+            
+            
             let mag_a = BABYLON.MeshBuilder.CreateTube("magnetization", { path: ArrowCurve(mag), radiusFunction: MagradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true }, scene);
+            let magpx_a = BABYLON.MeshBuilder.CreateTube("magnetization x", { path: ArrowCurve( new BABYLON.Vector3(mag.x, 0, 0)), radiusFunction: MagPradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true }, scene);
+            let magpy_a = BABYLON.MeshBuilder.CreateTube("magnetization y", { path: ArrowCurve( new BABYLON.Vector3(0, mag.y, 0)), radiusFunction: MagPradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true }, scene);
+            let magpz_a = BABYLON.MeshBuilder.CreateTube("magnetization z", { path: ArrowCurve( new BABYLON.Vector3(0, 0, mag.z)), radiusFunction: MagPradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true }, scene);
+
             let mag_mat = new BABYLON.StandardMaterial("Magmat", scene);
             mag_mat.diffuseColor = new BABYLON.Color3(1, 1, 0); // green
             mag_a.material = mag_mat;
+            magpx_a.material = mag_mat;
+            magpy_a.material = mag_mat;
+            magpz_a.material = mag_mat;
 
             let pumplaser = BABYLON.MeshBuilder.CreateTube("pumplaser", { path: LaserArrowCurve(pumpdir), radiusFunction: BradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true }, scene);
             let laser_mat = new BABYLON.StandardMaterial("axisMat", scene);
@@ -976,6 +1062,15 @@
                         rfphase += B1s * dt / len / 20.;
                         framephase += Fs * dt / len / 20.;
 
+                    if (pulse > 0) 
+                    {
+                       pulse -= B1a / 20. *dt / len;
+                          if (pulse <= 0) {
+                            pulse=0;
+                            B1_active(false);
+                          }
+                    } 
+
                         B1 = new BABYLON.Vector3(B1act * B1a / 20. * Math.sin(rfphase), 0, B1act * B1a / 20. * Math.cos(rfphase));
 
                         B.x = B0.x + B1.x;
@@ -987,11 +1082,40 @@
                         mag.z += dt / len * (-mag.x * B.y + mag.y * B.x - relax/20. * mag.z + pump/20. * (pumpmag.z - mag.z));
                     }
                 }
-                //                console.log(" B1: " + B1.toString() +", b1act:"+ B1act);
 
+                rfvec.x=0.3*Math.sin(rfphase);
+                rfvec.z=0.3*Math.cos(rfphase);
+                //                console.log(" B1: " + B1.toString() +", b1act:"+ B1act);
+                // console.log("pulse "+pulse);
                 mag_a = BABYLON.MeshBuilder.CreateTube("magnetization", { path: ArrowCurve(mag), radiusFunction: MagradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, instance: mag_a, updatable: true });
+                if( showAxProj) {
+                    magpx_a.visibility = true;
+                    magpy_a.visibility = true;
+                    magpz_a.visibility = true;
+                    magpx_a = BABYLON.MeshBuilder.CreateTube("magnetization x", { path: ArrowCurve(new BABYLON.Vector3(mag.x, 0, 0)), radiusFunction: MagPradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, instance: magpx_a, updatable: true });
+                    magpy_a = BABYLON.MeshBuilder.CreateTube("magnetization y", { path: ArrowCurve(new BABYLON.Vector3(0, mag.y, 0)), radiusFunction: MagPradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, instance: magpy_a, updatable: true });
+                    magpz_a = BABYLON.MeshBuilder.CreateTube("magnetization z", { path: ArrowCurve(new BABYLON.Vector3(0, 0, mag.z)), radiusFunction: MagPradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, instance: magpz_a, updatable: true });
+                    magpx_a.rotation.y = framephase;
+                    magpy_a.rotation.y = framephase;
+                    magpz_a.rotation.y = framephase;
+                } else {
+                    magpx_a.visibility = false;
+                    magpy_a.visibility = false;
+                    magpz_a.visibility = false;
+                }
+                
+
                 B0_a = BABYLON.MeshBuilder.CreateTube("B0", { path: ArrowCurve(B0L), radiusFunction: BradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, instance: B0_a, updatable: true });
                 B1_a = BABYLON.MeshBuilder.CreateTube("B1", { path: ArrowCurve(B1), radiusFunction: BradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, instance: B1_a, updatable: true });
+
+                if(showRFPhase){
+                    rf_a.visibility = true;
+                    rf_a = BABYLON.MeshBuilder.CreateTube("rf phase", { path: ArrowCurve(rfvec), radiusFunction: smallradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, instance: rf_a, updatable: true });
+                    rf_a.rotation.y = framephase;
+                } else {
+                    rf_a.visibility = false;
+                }
+
 
                 // Update history
                 histPoints.push(mag.clone());
