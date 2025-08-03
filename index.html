@@ -101,9 +101,9 @@
                 const path = [];
                 const len = ep.length();
                 var head;
-                if (len>=0.08){
+                if (len >= 0.08) {
                     head = ep.scale((len - 0.08) / len);
-                } else{
+                } else {
                     head = new BABYLON.Vector3(0, 0, 0);
                 }
 
@@ -118,7 +118,7 @@
 
             const LaserArrowCurve = (dir) => {
                 const dirrad = dir * Math.PI / 180;
-                
+
                 ep = new BABYLON.Vector3(
                     -1. * Math.sin(dirrad),
                     -1. * Math.cos(dirrad),
@@ -137,13 +137,13 @@
                 );
 
                 const path = [];
-                                 
-                path.push(ep)                
+
+                path.push(ep)
                 path.push(head),
-                path.push(head),
-                path.push(head),
-                path.push(head),
-                path.push(tip)
+                    path.push(head),
+                    path.push(head),
+                    path.push(head),
+                    path.push(tip)
                 return path;
             };
 
@@ -249,7 +249,7 @@
 
             let relax = typeof window.initialValues.relax === "number" ? window.initialValues.relax : 0;
             let pump = typeof window.initialValues.pump === "number" ? window.initialValues.pump : 0;
-            let pumpdir = typeof window.initialValues.pumpdir === "number" ? window.initialValues.pumpdir : 0;       
+            let pumpdir = typeof window.initialValues.pumpdir === "number" ? window.initialValues.pumpdir : 0;
             let B0d = typeof window.initialValues.B0d === "number" ? window.initialValues.B0d : 0; // direction in degrees
 
             let Fs = typeof window.initialValues.Fs === "number" ? window.initialValues.Fs : 0;
@@ -265,7 +265,7 @@
             // GUI
             var gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
-            let pulse=0;            
+            let pulse = 0;
 
             let histPoints = [];
             let histcolors = [];
@@ -291,18 +291,18 @@
             Masaerpanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
             gui.addControl(Masaerpanel);
 
-            
+
             const grid = new BABYLON.GUI.Grid();
             grid.addColumnDefinition(2);  // Column 1: fixed width
             grid.addColumnDefinition(1);  // Column 3: fixed width            
-            grid.addRowDefinition(105, true);            
+            grid.addRowDefinition(105, true);
 
             grid.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
             grid.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
             grid.width = "100%";
             grid.height = "115px";
-//            grid.paddingLeft = "20px";
-//          grid.paddingRight = "20px";
+            //            grid.paddingLeft = "20px";
+            //          grid.paddingRight = "20px";
             //grid.paddingTop = "10px";
             grid.paddingBottom = "10px";
             Masaerpanel.addControl(grid);
@@ -366,16 +366,16 @@
             const B0_active = (value) => {
                 B0act = value;
                 sliderB0.alpha = value ? 1 : 0.4;
-                sliderB0.value = B0s;                
+                sliderB0.value = B0s;
                 valueB0.text = "R = " + B0s;
                 valueB0.color = value ? "white" : "gray";
                 sliderB0d.alpha = value ? 1 : 0.4;
-                valueB0d.text = "dir = " + B0d.toFixed(0)+ "°";
+                valueB0d.text = "dir = " + B0d.toFixed(0) + "°";
                 valueB0d.color = value ? "white" : "gray";
             }
 
             const B0_magnitude_change = (value) => {
-                B0s = Math.round(value, 2);                
+                B0s = Math.round(value, 2);
                 B0_active(B0act); // Update based on B0s
             }
             const B0_direction_change = (value) => {
@@ -398,7 +398,7 @@
             sliderB0.width = "95%";
             sliderB0.color = "gray";
             sliderB0.background = "gray";
-            sliderB0.thumbWidth = "4px";            
+            sliderB0.thumbWidth = "4px";
             sliderB0.alpha = 0.4;
             sliderB0.onValueChangedObservable.add(B0_magnitude_change);
 
@@ -416,7 +416,7 @@
             sliderB0d.width = "95%";
             sliderB0d.color = "gray";
             sliderB0d.background = "gray";
-            sliderB0d.thumbWidth = "4px";            
+            sliderB0d.thumbWidth = "4px";
             sliderB0d.alpha = 0.4;
             sliderB0d.onValueChangedObservable.add(B0_direction_change);
 
@@ -455,7 +455,7 @@
                 valueB1.color = value ? "white" : "gray";
                 valueB1a.text = "ampl = " + B1a.toFixed(1);
                 sliderB1a.alpha = value ? 1 : 0.4;
-                valueB1a.color = value ? "white" : "gray";               
+                valueB1a.color = value ? "white" : "gray";
             }
 
             const B1_amplitude_change = (value) => {
@@ -505,7 +505,7 @@
             sliderB1.color = "gray";
             sliderB1.step = 1;
             sliderB1.thumbWidth = "4px";
-            sliderB1.background = "gray";            
+            sliderB1.background = "gray";
             sliderB1.alpha = 0.4;
             sliderB1.onValueChangedObservable.add(B1_frequency_change);
 
@@ -568,15 +568,15 @@
             });
 
             Fs_change(Fs); // Initialize based on Fs
-            
+
             grid2.addControl(labelF, 2, 0);
-            grid2.addControl(checkboxF, 2, 1);            
+            grid2.addControl(checkboxF, 2, 1);
             grid2.addControl(sliderF, 2, 2);
             grid2.addControl(valueF, 2, 3);
-// Laser  controls ************************************************************
+            // Laser  controls ************************************************************
 
-            const labelRel  = new BABYLON.GUI.TextBlock();
-            const valueRel  = new BABYLON.GUI.TextBlock();            
+            const labelRel = new BABYLON.GUI.TextBlock();
+            const valueRel = new BABYLON.GUI.TextBlock();
             const sliderRel = new BABYLON.GUI.Slider();
 
             labelRel.text = `Relax.`;
@@ -591,7 +591,7 @@
             valueRel.height = "25px";
             valueRel.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
 
-            
+
             const Rel_change = (value) => {
                 relax = value
                 valueRel.text = "R = " + relax.toFixed(1);
@@ -605,18 +605,18 @@
             sliderRel.width = "95%";
             sliderRel.color = "gray";
             sliderRel.background = "gray";
-            sliderRel.thumbWidth = "4px";            
+            sliderRel.thumbWidth = "4px";
             sliderRel.alpha = 0.4;
             sliderRel.onValueChangedObservable.add(Rel_change);
 
-            Rel_change(relax); 
-            
-            grid3.addControl(labelRel, 0, 0);            
-            grid3.addControl(sliderRel, 0, 1);
-            grid3.addControl(valueRel, 0, 2);            
+            Rel_change(relax);
 
-            const labelPump  = new BABYLON.GUI.TextBlock();
-            const valuePump  = new BABYLON.GUI.TextBlock();            
+            grid3.addControl(labelRel, 0, 0);
+            grid3.addControl(sliderRel, 0, 1);
+            grid3.addControl(valueRel, 0, 2);
+
+            const labelPump = new BABYLON.GUI.TextBlock();
+            const valuePump = new BABYLON.GUI.TextBlock();
             const sliderPump = new BABYLON.GUI.Slider();
 
             labelPump.text = `Pump`;
@@ -630,7 +630,7 @@
             valuePump.fontSize = 18;
             valuePump.height = "25px";
             valuePump.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-            
+
             const Pump_change = (value) => {
                 pump = value;
                 valuePump.text = "R = " + pump.toFixed(1);
@@ -644,18 +644,18 @@
             sliderPump.width = "95%";
             sliderPump.color = "gray";
             sliderPump.background = "gray";
-            sliderPump.thumbWidth = "4px";            
+            sliderPump.thumbWidth = "4px";
             sliderPump.alpha = 0.4;
             sliderPump.onValueChangedObservable.add(Pump_change);
 
-            Pump_change(pump); 
+            Pump_change(pump);
 
-            grid3.addControl(labelPump, 1, 0);            
-            grid3.addControl(sliderPump,1, 1);
+            grid3.addControl(labelPump, 1, 0);
+            grid3.addControl(sliderPump, 1, 1);
             grid3.addControl(valuePump, 1, 2);
 
-            const labelPumpDir  = new BABYLON.GUI.TextBlock();
-            const valuePumpDir  = new BABYLON.GUI.TextBlock();            
+            const labelPumpDir = new BABYLON.GUI.TextBlock();
+            const valuePumpDir = new BABYLON.GUI.TextBlock();
             const sliderPumpDir = new BABYLON.GUI.Slider();
 
             labelPumpDir.text = `Pu dir`;
@@ -669,7 +669,7 @@
             valuePumpDir.fontSize = 18;
             valuePumpDir.height = "25px";
             valuePumpDir.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-            
+
             const PumpDir_change = (value) => {
                 pumpdir = value;
                 valuePumpDir.text = "dir = " + pumpdir.toFixed(0) + "°";
@@ -683,19 +683,18 @@
             sliderPumpDir.width = "95%";
             sliderPumpDir.color = "gray";
             sliderPumpDir.background = "gray";
-            sliderPumpDir.thumbWidth = "4px";            
+            sliderPumpDir.thumbWidth = "4px";
             sliderPumpDir.alpha = 0.4;
             sliderPumpDir.onValueChangedObservable.add(PumpDir_change);
 
-            PumpDir_change(pumpdir); 
-            
-            grid3.addControl(labelPumpDir, 2, 0);            
-            grid3.addControl(sliderPumpDir,2, 1);
-            grid3.addControl(valuePumpDir, 2, 2);            
-            
+            PumpDir_change(pumpdir);
+
+            grid3.addControl(labelPumpDir, 2, 0);
+            grid3.addControl(sliderPumpDir, 2, 1);
+            grid3.addControl(valuePumpDir, 2, 2);
 
 
-// Larmor controls
+            // Larmor controls
             const checkboxL = new BABYLON.GUI.Checkbox();
             checkboxL.width = "20px";
             checkboxL.height = "20px";
@@ -717,15 +716,15 @@
             labelL.height = "30px";
             labelL.width = "145px";
             labelL.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-         
+
             panelL.addControl(labelL);
             panelL.addControl(checkboxL);
-            
+
             grid2.addControl(panelL, 2, 4);
 
-            
+
             /// options panel ************************************************************
-            
+
             const checkboxH = new BABYLON.GUI.Checkbox();
             checkboxH.width = "20px";
             checkboxH.height = "20px";
@@ -747,11 +746,11 @@
             labelH.fontSize = 18;
             labelH.height = "30px";
             labelH.width = "80px";
-            labelH.paddingLeft = "5px";            
+            labelH.paddingLeft = "5px";
             labelH.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+            labelH.onPointerDownObservable.add(function (value) {checkboxH.isChecked = !checkboxH.isChecked;});    
 
 
- 
             const checkboxProj = new BABYLON.GUI.Checkbox();
             let showAxProj = false;
             checkboxProj.width = "20px";
@@ -759,7 +758,7 @@
             checkboxProj.color = "white";
             checkboxProj.background = "gray";
             checkboxProj.isChecked = showAxProj;
-            
+
             checkboxProj.onIsCheckedChangedObservable.add(function (value) {
                 showAxProj = value;
             });
@@ -769,11 +768,11 @@
             labelProj.color = "white";
             labelProj.fontSize = 18;
             labelProj.height = "30px";
-            labelProj.width = "150px";
-            labelProj.paddingLeft = "10px";            
+            labelProj.width = "166px";
+            labelProj.paddingLeft = "20px";
             labelProj.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
             labelProj.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
-
+            labelProj.onPointerDownObservable.add(function (value) {checkboxProj.isChecked = !checkboxProj.isChecked;});    
 
             const checkboxRFPhase = new BABYLON.GUI.Checkbox();
             let showRFPhase = false
@@ -781,64 +780,130 @@
             checkboxRFPhase.height = "20px";
             checkboxRFPhase.color = "white";
             checkboxRFPhase.background = "gray";
-            checkboxRFPhase.isChecked = showRFPhase;            
+            checkboxRFPhase.isChecked = showRFPhase;
             checkboxRFPhase.onIsCheckedChangedObservable.add(function (value) {
                 showRFPhase = value;
             });
 
             const labelRFPhase = new BABYLON.GUI.TextBlock();
-            labelRFPhase.text = `  RF Phase`;
+            labelRFPhase.text = `  RF phase`;
             labelRFPhase.color = "white";
             labelRFPhase.fontSize = 18;
             labelRFPhase.height = "30px";
-            labelRFPhase.width = "118px";
-            labelRFPhase.paddingLeft = "10px";            
+            labelRFPhase.width = "117px";
+            labelRFPhase.paddingLeft = "20px";
             labelRFPhase.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
             labelRFPhase.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
+            labelRFPhase.onPointerDownObservable.add(function (value) {checkboxRFPhase.isChecked = !checkboxRFPhase.isChecked;});    
+
+            const checkboxRFPhaseProj = new BABYLON.GUI.Checkbox();
+            let showRFPhaseProj = false
+            checkboxRFPhaseProj.width = "20px";
+            checkboxRFPhaseProj.height = "20px";
+            checkboxRFPhaseProj.color = "white";
+            checkboxRFPhaseProj.background = "gray";
+            checkboxRFPhaseProj.isChecked = showRFPhaseProj;
+            checkboxRFPhaseProj.onIsCheckedChangedObservable.add(function (value) {
+                showRFPhaseProj = value;
+            });
+
+            const labelRFPhaseProj = new BABYLON.GUI.TextBlock();
+            labelRFPhaseProj.text = `  RF phase projection`;
+            labelRFPhaseProj.color = "white";
+            labelRFPhaseProj.fontSize = 18;
+            labelRFPhaseProj.height = "30px";
+            labelRFPhaseProj.width = "200px";
+            labelRFPhaseProj.paddingLeft = "20px";
+            labelRFPhaseProj.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+            labelRFPhaseProj.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
+            labelRFPhaseProj.onPointerDownObservable.add(function (value) {checkboxRFPhaseProj.isChecked = !checkboxRFPhaseProj.isChecked;});    
+
+            const checkboxPlaneProj = new BABYLON.GUI.Checkbox();
+            let showPlaneProj = false
+            checkboxPlaneProj.width = "20px";
+            checkboxPlaneProj.height = "20px";
+            checkboxPlaneProj.color = "white";
+            checkboxPlaneProj.background = "gray";
+            checkboxPlaneProj.isChecked = showPlaneProj;
+            checkboxPlaneProj.onIsCheckedChangedObservable.add(function (value) {
+                showPlaneProj = value;
+            });
+
+            const labelPlaneProj = new BABYLON.GUI.TextBlock();
+            labelPlaneProj.text = `  Plane projection`;
+            labelPlaneProj.color = "white";
+            labelPlaneProj.fontSize = 18;
+            labelPlaneProj.height = "30px";
+            labelPlaneProj.width = "167px";
+            labelPlaneProj.paddingLeft = "20px";
+            labelPlaneProj.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+            labelPlaneProj.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
+            labelPlaneProj.onPointerDownObservable.add(function (value) {checkboxPlaneProj.isChecked = !checkboxPlaneProj.isChecked;});    
 
 
+            const checkboxLinearRF = new BABYLON.GUI.Checkbox();
+            let LinearRF = false
+            checkboxLinearRF.width = "20px";
+            checkboxLinearRF.height = "20px";
+            checkboxLinearRF.color = "white";
+            checkboxLinearRF.background = "gray";
+            checkboxLinearRF.isChecked = LinearRF;
+            checkboxLinearRF.onIsCheckedChangedObservable.add(function (value) {
+                LinearRF = value;
+            });
 
-
-
-
-
-
-
-
-
-
-
+            const labelLinearRF = new BABYLON.GUI.TextBlock();
+            labelLinearRF.text = `  Linear RF`;
+            labelLinearRF.color = "white";
+            labelLinearRF.fontSize = 18;
+            labelLinearRF.height = "30px";
+            labelLinearRF.width = "118px";
+            labelLinearRF.paddingLeft = "20px";
+            labelLinearRF.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+            labelLinearRF.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
+            labelLinearRF.onPointerDownObservable.add(function (value) {checkboxLinearRF.isChecked = !checkboxLinearRF.isChecked;});    
 
 
             var panelH = new BABYLON.GUI.StackPanel();
             panelH.height = "35px";
-            panelH.width = "100%";   
-            panelH.paddingLeft = "5px";            
-            panelH.paddingBottom = "15px";            
-        
+            panelH.width = "100%";
+            panelH.paddingLeft = "5px";
+            panelH.paddingBottom = "15px";
+
             panelH.isVertical = false;
             panelH.addControl(labelH);
             panelH.addControl(checkboxH);
             panelH.addControl(labelProj);
             panelH.addControl(checkboxProj);
+
+            panelH.addControl(labelPlaneProj);
+            panelH.addControl(checkboxPlaneProj);
+
             panelH.addControl(labelRFPhase);
             panelH.addControl(checkboxRFPhase);
-            
+            panelH.addControl(labelRFPhaseProj);
+            panelH.addControl(checkboxRFPhaseProj);
+
+
+            panelH.addControl(labelLinearRF);
+            panelH.addControl(checkboxLinearRF);
+
+
 
 
             Masaerpanel.addControl(panelH);
 
 
-/// buttons panel ************************************************************
+            /// buttons panel ************************************************************
 
-            
+
             let paused = false;
             var buttonPause = BABYLON.GUI.Button.CreateSimpleButton("butPause", "Pause");
             buttonPause.verticalAlignment = 1;
-            buttonPause.width = "100px";
+            buttonPause.width = "110px";
             buttonPause.height = "28px";
-            buttonPause.paddingLeft = "5px";
-            buttonPause.paddingRight = "5px";
+            buttonPause.paddingLeft = "10px";
+            buttonPause.paddingRight = "10px";
             buttonPause.color = "black";
             buttonPause.cornerRadius = 4;
             buttonPause.background = "#e0e0e0";
@@ -850,10 +915,10 @@
 
             var button1 = BABYLON.GUI.Button.CreateSimpleButton("but1", "Reset Z");
             button1.verticalAlignment = 1;// (debugNode as BABYLON.Unknown)
-            button1.width = "100px";
+            button1.width = "110px";
             button1.height = "28px";
-            button1.paddingLeft = "5px";
-            button1.paddingRight = "5px";
+            button1.paddingLeft = "10px";
+            button1.paddingRight = "10px";
             button1.color = "black";
             button1.cornerRadius = 4;
             button1.background = "#e0e0e0";
@@ -863,13 +928,13 @@
                 resethist();
             });
 
-            
+
             var button2 = BABYLON.GUI.Button.CreateSimpleButton("but2", "Reset X");
             button2.verticalAlignment = 1;
-            button2.width = "100px";
+            button2.width = "110px";
             button2.height = "28px";
-            button2.paddingLeft = "5px";
-            button2.paddingRight = "5px";
+            button2.paddingLeft = "10px";
+            button2.paddingRight = "10px";
             button2.color = "black";
             button2.cornerRadius = 4;
             button2.background = "#e0e0e0";
@@ -877,30 +942,30 @@
                 mag = new BABYLON.Vector3(1., 0., 0.);
                 resethist();
             });
-            
+
 
             var buttonReset0 = BABYLON.GUI.Button.CreateSimpleButton("butMatchFrame", "Rest 0");
             buttonReset0.verticalAlignment = 1;
-            buttonReset0.width = "100px";
+            buttonReset0.width = "110px";
             buttonReset0.height = "28px";
-            buttonReset0.paddingLeft = "5px";
-            buttonReset0.paddingRight = "5px";
+            buttonReset0.paddingLeft = "10px";
+            buttonReset0.paddingRight = "10px";
             buttonReset0.color = "black";
             buttonReset0.cornerRadius = 4;
             buttonReset0.background = "#e0e0e0";
             buttonReset0.onPointerUpObservable.add(function () {
-                
-                mag = new BABYLON.Vector3(0., 0., 0.);   
-                resethist();             
+
+                mag = new BABYLON.Vector3(0., 0., 0.);
+                resethist();
             });
 
 
             var buttonMatchFrame = BABYLON.GUI.Button.CreateSimpleButton("butMatchFrame", "rot. Frame");
             buttonMatchFrame.verticalAlignment = 1;
-            buttonMatchFrame.width = "120px";
+            buttonMatchFrame.width = "130px";
             buttonMatchFrame.height = "28px";
-            buttonMatchFrame.paddingLeft = "5px";
-            buttonMatchFrame.paddingRight = "5px";
+            buttonMatchFrame.paddingLeft = "10px";
+            buttonMatchFrame.paddingRight = "10px";
             buttonMatchFrame.color = "black";
             buttonMatchFrame.cornerRadius = 4;
             buttonMatchFrame.background = "#e0e0e0";
@@ -912,61 +977,59 @@
                     Fs_change(-B1s);
                 }
             });
-            
+
             var buttonB0rev = BABYLON.GUI.Button.CreateSimpleButton("butRerverse", "reverse B0");
             buttonB0rev.verticalAlignment = 1;
-            buttonB0rev.width = "120px";
+            buttonB0rev.width = "130px";
             buttonB0rev.height = "28px";
-            buttonB0rev.paddingLeft = "5px";
-            buttonB0rev.paddingRight = "5px";
+            buttonB0rev.paddingLeft = "10px";
+            buttonB0rev.paddingRight = "10px";
             buttonB0rev.color = "black";
             buttonB0rev.cornerRadius = 4;
             buttonB0rev.background = "#e0e0e0";
             buttonB0rev.onPointerUpObservable.add(function () {
-                if(larmorth)
-                {   
-                    B0_magnitude_change(-(B0s+Fs)-Fs);  
+                if (larmorth) {
+                    B0_magnitude_change(-(B0s + Fs) - Fs);
                 } else {
                     B0_magnitude_change(-B0s);
                 }
-                
+
             });
 
-            
+
             var buttonPiPulse = BABYLON.GUI.Button.CreateSimpleButton("butPiPulse", "pi Pulse");
             buttonPiPulse.verticalAlignment = 1;
-            buttonPiPulse.width = "120px";
+            buttonPiPulse.width = "130px";
             buttonPiPulse.height = "28px";
-            buttonPiPulse.paddingLeft = "5px";
-            buttonPiPulse.paddingRight = "5px";
+            buttonPiPulse.paddingLeft = "10px";
+            buttonPiPulse.paddingRight = "10px";
             buttonPiPulse.color = "black";
             buttonPiPulse.cornerRadius = 4;
             buttonPiPulse.background = "#e0e0e0";
             buttonPiPulse.onPointerUpObservable.add(function () {
-                if(pulse==0)
-                {   
-                    pulse = Math.PI/2.;
+                if (pulse == 0) {
+                    pulse = Math.PI / 2.;
                     B1_active(true);
-                }                 
+                }
             });
 
 
             var panelB = new BABYLON.GUI.StackPanel();
             panelB.height = "28px";
-            panelB.width = "100%"; 
-            panelB.paddingLeft = "10px";           
+            panelB.width = "100%";
+            panelB.paddingLeft = "10px";
             panelB.isVertical = false;
             panelB.addControl(buttonPause);
-            panelB.addControl(button1);  
+            panelB.addControl(button1);
             panelB.addControl(button2);
-            panelB.addControl(buttonReset0);            
+            panelB.addControl(buttonReset0);
             panelB.addControl(buttonMatchFrame);
-            panelB.addControl(buttonB0rev);          
-            panelB.addControl(buttonPiPulse);      
+            panelB.addControl(buttonB0rev);
+            panelB.addControl(buttonPiPulse);
             Masaerpanel.addControl(panelB);
 
-            
-            
+
+
             var line = new BABYLON.GUI.MultiLine();
             line.add(sliderB0);
             line.add(sliderF);
@@ -987,12 +1050,12 @@
             ax_z.material = axisMat;
 
             let rf_a = BABYLON.MeshBuilder.CreateTube("rf phase", { path: ArrowCurve(rfvec), radiusFunction: smallradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true }, scene);
-            
-            
+
+
             let mag_a = BABYLON.MeshBuilder.CreateTube("magnetization", { path: ArrowCurve(mag), radiusFunction: MagradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true }, scene);
-            let magpx_a = BABYLON.MeshBuilder.CreateTube("magnetization x", { path: ArrowCurve( new BABYLON.Vector3(mag.x, 0, 0)), radiusFunction: MagPradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true }, scene);
-            let magpy_a = BABYLON.MeshBuilder.CreateTube("magnetization y", { path: ArrowCurve( new BABYLON.Vector3(0, mag.y, 0)), radiusFunction: MagPradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true }, scene);
-            let magpz_a = BABYLON.MeshBuilder.CreateTube("magnetization z", { path: ArrowCurve( new BABYLON.Vector3(0, 0, mag.z)), radiusFunction: MagPradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true }, scene);
+            let magpx_a = BABYLON.MeshBuilder.CreateTube("magnetization x", { path: ArrowCurve(new BABYLON.Vector3(mag.x, 0, 0)), radiusFunction: MagPradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true }, scene);
+            let magpy_a = BABYLON.MeshBuilder.CreateTube("magnetization y", { path: ArrowCurve(new BABYLON.Vector3(0, mag.y, 0)), radiusFunction: MagPradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true }, scene);
+            let magpz_a = BABYLON.MeshBuilder.CreateTube("magnetization z", { path: ArrowCurve(new BABYLON.Vector3(0, 0, mag.z)), radiusFunction: MagPradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true }, scene);
 
             let mag_mat = new BABYLON.StandardMaterial("Magmat", scene);
             mag_mat.diffuseColor = new BABYLON.Color3(1, 1, 0); // green
@@ -1003,12 +1066,12 @@
 
             let pumplaser = BABYLON.MeshBuilder.CreateTube("pumplaser", { path: LaserArrowCurve(pumpdir), radiusFunction: BradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true }, scene);
             let laser_mat = new BABYLON.StandardMaterial("axisMat", scene);
-            
+
             laser_mat.diffuseColor = new BABYLON.Color3(1, 0, 0); //  red                        
             //laser_mat.emissiveColor = new BABYLON.Color3(0.5, 0, 0); 
             pumplaser.material = laser_mat;
-            
-            
+
+
             let B0_a = BABYLON.MeshBuilder.CreateTube("B0", { path: ArrowCurve(B0), radiusFunction: BradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true }, scene);
             let B1_a = BABYLON.MeshBuilder.CreateTube("B1", { path: ArrowCurve(B1), radiusFunction: BradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true }, scene);
             let B_mat = new BABYLON.StandardMaterial("B0Mat", scene);
@@ -1021,10 +1084,10 @@
             hist.use
 
             let angle = 0.000;
-            
+
             let dt = 0.02
             let len = 1000;
-            
+
             let rfphase = 0.0;
             let framephase = 0.0;
 
@@ -1043,8 +1106,8 @@
                 );
 
 
-               const dirrad = pumpdir * Math.PI / 180;
-                
+                const dirrad = pumpdir * Math.PI / 180;
+
                 pumpmag = new BABYLON.Vector3(
                     2. * Math.sin(dirrad),
                     2. * Math.cos(dirrad),
@@ -1062,33 +1125,36 @@
                         rfphase += B1s * dt / len / 20.;
                         framephase += Fs * dt / len / 20.;
 
-                    if (pulse > 0) 
-                    {
-                       pulse -= B1a / 20. *dt / len;
-                          if (pulse <= 0) {
-                            pulse=0;
-                            B1_active(false);
-                          }
-                    } 
+                        if (pulse > 0) {
+                            pulse -= B1a / 20. * dt / len;
+                            if (pulse <= 0) {
+                                pulse = 0;
+                                B1_active(false);
+                            }
+                        }
 
-                        B1 = new BABYLON.Vector3(B1act * B1a / 20. * Math.sin(rfphase), 0, B1act * B1a / 20. * Math.cos(rfphase));
+                        if (LinearRF) {
+                            B1 = new BABYLON.Vector3(2 * B1act * B1a / 20. * Math.sin(rfphase), 0, 0);
+                        } else {
+                            B1 = new BABYLON.Vector3(B1act * B1a / 20. * Math.sin(rfphase), 0, B1act * B1a / 20. * Math.cos(rfphase));
+                        }
 
                         B.x = B0.x + B1.x;
                         B.y = B0.y + B1.y;
                         B.z = B0.z + B1.z;
 
-                        mag.x += dt / len * (-mag.y * B.z + mag.z * B.y - relax/20. * mag.x + pump/20. * (pumpmag.x - mag.x));
-                        mag.y += dt / len * (-mag.z * B.x + mag.x * B.z - relax/20. * mag.y + pump/20. * (pumpmag.y - mag.y));
-                        mag.z += dt / len * (-mag.x * B.y + mag.y * B.x - relax/20. * mag.z + pump/20. * (pumpmag.z - mag.z));
+                        mag.x += dt / len * (-mag.y * B.z + mag.z * B.y - relax / 20. * mag.x + pump / 20. * (pumpmag.x - mag.x));
+                        mag.y += dt / len * (-mag.z * B.x + mag.x * B.z - relax / 20. * mag.y + pump / 20. * (pumpmag.y - mag.y));
+                        mag.z += dt / len * (-mag.x * B.y + mag.y * B.x - relax / 20. * mag.z + pump / 20. * (pumpmag.z - mag.z));
                     }
                 }
 
-                rfvec.x=0.3*Math.sin(rfphase);
-                rfvec.z=0.3*Math.cos(rfphase);
+
                 //                console.log(" B1: " + B1.toString() +", b1act:"+ B1act);
                 // console.log("pulse "+pulse);
                 mag_a = BABYLON.MeshBuilder.CreateTube("magnetization", { path: ArrowCurve(mag), radiusFunction: MagradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, instance: mag_a, updatable: true });
-                if( showAxProj) {
+
+                if (showAxProj) {
                     magpx_a.visibility = true;
                     magpy_a.visibility = true;
                     magpz_a.visibility = true;
@@ -1098,17 +1164,57 @@
                     magpx_a.rotation.y = framephase;
                     magpy_a.rotation.y = framephase;
                     magpz_a.rotation.y = framephase;
+                } else if (showPlaneProj) {
+                    magpx_a.visibility = true;
+                    magpy_a.visibility = true;
+                    magpz_a.visibility = false;
+                    magpx_a = BABYLON.MeshBuilder.CreateTube("magnetization x", { path: ArrowCurve(new BABYLON.Vector3(mag.x, 0, mag.z)), radiusFunction: MagPradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, instance: magpx_a, updatable: true });
+                    magpy_a = BABYLON.MeshBuilder.CreateTube("magnetization z", { path: ArrowCurve(new BABYLON.Vector3(0, mag.y, 0)), radiusFunction: MagPradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, instance: magpy_a, updatable: true });
+                    magpx_a.rotation.y = framephase;
+                    magpy_a.rotation.y = framephase;
+
+                } else if (showRFPhaseProj) {
+                    magpx_a.visibility = true;
+                    magpy_a.visibility = true;
+                    magpz_a.visibility = true;
+
+                    let projIP = (mag.x * Math.sin(rfphase) + mag.z * Math.cos(rfphase));
+                    let projQU = (mag.x * Math.cos(rfphase) + mag.z * -1. * Math.sin(rfphase));
+
+                    rfvec.x = (projIP * Math.sin(rfphase));
+                    rfvec.z = (projIP * Math.cos(rfphase));
+
+                    magpx_a = BABYLON.MeshBuilder.CreateTube("magnetization x", { path: ArrowCurve(new BABYLON.Vector3(rfvec.x, 0, rfvec.z)), radiusFunction: MagPradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, instance: magpx_a, updatable: true });
+
+                    magpy_a = BABYLON.MeshBuilder.CreateTube("magnetization y", { path: ArrowCurve(new BABYLON.Vector3(0, mag.y, 0)), radiusFunction: MagPradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, instance: magpy_a, updatable: true });
+
+                    rfvec.x = (projQU * Math.cos(rfphase));
+                    rfvec.z = (projQU * -1. * Math.sin(rfphase));
+                    magpz_a = BABYLON.MeshBuilder.CreateTube("magnetization z", { path: ArrowCurve(new BABYLON.Vector3(rfvec.x, 0, rfvec.z)), radiusFunction: MagPradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, instance: magpz_a, updatable: true });
+
+                    magpx_a.rotation.y = framephase;
+                    magpy_a.rotation.y = framephase;
+                    magpz_a.rotation.y = framephase;
+
                 } else {
                     magpx_a.visibility = false;
                     magpy_a.visibility = false;
                     magpz_a.visibility = false;
                 }
-                
+
 
                 B0_a = BABYLON.MeshBuilder.CreateTube("B0", { path: ArrowCurve(B0L), radiusFunction: BradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, instance: B0_a, updatable: true });
                 B1_a = BABYLON.MeshBuilder.CreateTube("B1", { path: ArrowCurve(B1), radiusFunction: BradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, instance: B1_a, updatable: true });
 
-                if(showRFPhase){
+                if (showRFPhaseProj) {
+                } else {
+
+                }
+
+
+                if (showRFPhase) {
+                    rfvec.x = 0.3 * Math.sin(rfphase);
+                    rfvec.z = 0.3 * Math.cos(rfphase);
                     rf_a.visibility = true;
                     rf_a = BABYLON.MeshBuilder.CreateTube("rf phase", { path: ArrowCurve(rfvec), radiusFunction: smallradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, instance: rf_a, updatable: true });
                     rf_a.rotation.y = framephase;
@@ -1123,14 +1229,14 @@
                     histPoints.shift(); // Remove the oldest point
                 }
 
-                if (pump>0) {
-                    pumplaser.visibility=true;
+                if (pump > 0) {
+                    pumplaser.visibility = true;
                     pumplaser = BABYLON.MeshBuilder.CreateTube("pumplaser", { path: LaserArrowCurve(pumpdir), radiusFunction: BradiusChange, sideOrientation: BABYLON.Mesh.DOUBLESIDE, instance: pumplaser, updatable: true });
-                    pumplaser.rotation.y = framephase; 
+                    pumplaser.rotation.y = framephase;
                 } else {
-                    pumplaser.visibility=false;
+                    pumplaser.visibility = false;
                 }
-                
+
                 hist = BABYLON.MeshBuilder.CreateLines("lines", { points: histPoints, instance: hist });
                 hist.rotation.y = framephase;
 
@@ -1140,7 +1246,7 @@
 
                 ax_x.rotation.y = framephase;
                 ax_z.rotation.y = framephase;
-                
+
 
                 if (showaxis) {
                     ax_x.visibility = 1;
