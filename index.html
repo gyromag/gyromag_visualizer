@@ -245,23 +245,19 @@
             let B1s = typeof window.initialValues.B1f === "number" ? window.initialValues.B1f : 0;
             let B1act = typeof window.initialValues.B1f === "number" ? true : false;
 
-            let B1a = typeof window.initialValues.B1a === "number" ? window.initialValues.B1a : 10;
+            let B1a = typeof window.initialValues.B1a === "number" ? window.initialValues.B1a : 5;
 
             let relax = typeof window.initialValues.relax === "number" ? window.initialValues.relax : 0;
             let pump = typeof window.initialValues.pump === "number" ? window.initialValues.pump : 0;
             let pumpdir = typeof window.initialValues.pumpdir === "number" ? window.initialValues.pumpdir : 0;
             let B0d = typeof window.initialValues.B0d === "number" ? window.initialValues.B0d : 0; // direction in degrees
-
             let Fs = typeof window.initialValues.Fs === "number" ? window.initialValues.Fs : 0;
-
-            let showaxis = typeof window.initialValues.showaxis === "boolean" ? window.initialValues.showaxis : true;
-            let larmorth = typeof window.initialValues.larmorth === "boolean" ? window.initialValues.larmorth : false;
-
+            let showaxis = typeof window.initialValues.showaxis === "number" ? window.initialValues.showaxis : true;
+            let larmorth = typeof window.initialValues.larmorth === "number" ? window.initialValues.larmorth : false;
+            
             let mag = new BABYLON.Vector3(1., 1.1, 0);
-
-
-
             let rfvec = new BABYLON.Vector3(0.3, 0, 0); // Radiofrequency vector
+            
             // GUI
             var gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
@@ -537,7 +533,7 @@
             checkboxF.height = "20px";
             checkboxF.color = "white";
             checkboxF.background = "gray";
-            checkboxF.isChecked = true;
+            checkboxF.isChecked = showaxis;
             checkboxF.onIsCheckedChangedObservable.add(function (value) {
                 showaxis = value;
             });
@@ -700,7 +696,7 @@
             checkboxL.height = "20px";
             checkboxL.color = "white";
             checkboxL.background = "gray";
-            checkboxL.isChecked = false;
+            checkboxL.isChecked = larmorth;
             checkboxL.onIsCheckedChangedObservable.add(function (value) {
                 larmorth = value;
             });
@@ -726,19 +722,19 @@
             /// options panel ************************************************************
 
             const checkboxH = new BABYLON.GUI.Checkbox();
+            let showHistory = typeof window.initialValues.showhistory === "number" ? window.initialValues.showhistory : false;
             checkboxH.width = "20px";
             checkboxH.height = "20px";
             checkboxH.color = "white";
-            checkboxH.background = "gray";
-            checkboxH.isChecked = true;
-            let showHistory = true;
+            checkboxH.background = "gray";            
             checkboxH.onIsCheckedChangedObservable.add(function (value) {
-                showHistory = value;
-                hist.visibility = value ? 1 : 0;
+                showHistory = value;                
                 if (value) {
                     resethist();
                 }
             });
+            checkboxH.isChecked = showHistory;            
+            
 
             const labelH = new BABYLON.GUI.TextBlock();
             labelH.text = `  History`;
@@ -752,7 +748,7 @@
 
 
             const checkboxProj = new BABYLON.GUI.Checkbox();
-            let showAxProj = false;
+            let showAxProj = typeof window.initialValues.axisprojections === "number" ? window.initialValues.axisprojections : false;
             checkboxProj.width = "20px";
             checkboxProj.height = "20px";
             checkboxProj.color = "white";
@@ -775,7 +771,7 @@
             labelProj.onPointerDownObservable.add(function (value) {checkboxProj.isChecked = !checkboxProj.isChecked;});    
 
             const checkboxRFPhase = new BABYLON.GUI.Checkbox();
-            let showRFPhase = false
+            let showRFPhase = typeof window.initialValues.showrfphase === "number" ? window.initialValues.showrfphase : false;
             checkboxRFPhase.width = "20px";
             checkboxRFPhase.height = "20px";
             checkboxRFPhase.color = "white";
@@ -797,7 +793,7 @@
             labelRFPhase.onPointerDownObservable.add(function (value) {checkboxRFPhase.isChecked = !checkboxRFPhase.isChecked;});    
 
             const checkboxRFPhaseProj = new BABYLON.GUI.Checkbox();
-            let showRFPhaseProj = false
+            let showRFPhaseProj = typeof window.initialValues.showphaseprojection === "number" ? window.initialValues.showphaseprojection : false;
             checkboxRFPhaseProj.width = "20px";
             checkboxRFPhaseProj.height = "20px";
             checkboxRFPhaseProj.color = "white";
@@ -819,7 +815,7 @@
             labelRFPhaseProj.onPointerDownObservable.add(function (value) {checkboxRFPhaseProj.isChecked = !checkboxRFPhaseProj.isChecked;});    
 
             const checkboxPlaneProj = new BABYLON.GUI.Checkbox();
-            let showPlaneProj = false
+            let showPlaneProj = typeof window.initialValues.showplaneprojection === "number" ? window.initialValues.showplaneprojection : false;
             checkboxPlaneProj.width = "20px";
             checkboxPlaneProj.height = "20px";
             checkboxPlaneProj.color = "white";
@@ -842,7 +838,7 @@
 
 
             const checkboxLinearRF = new BABYLON.GUI.Checkbox();
-            let LinearRF = false
+            let LinearRF = typeof window.initialValues.linearrf === "number" ? window.initialValues.linearrf : false;
             checkboxLinearRF.width = "20px";
             checkboxLinearRF.height = "20px";
             checkboxLinearRF.color = "white";
@@ -883,7 +879,6 @@
             panelH.addControl(checkboxRFPhase);
             panelH.addControl(labelRFPhaseProj);
             panelH.addControl(checkboxRFPhaseProj);
-
 
             panelH.addControl(labelLinearRF);
             panelH.addControl(checkboxLinearRF);
@@ -1014,6 +1009,48 @@
             });
 
 
+            
+            var buttonLink = BABYLON.GUI.Button.CreateSimpleButton("butLink", "Generate link");
+            buttonLink.verticalAlignment = 1;
+            buttonLink.width = "130px";
+            buttonLink.height = "28px";
+            buttonLink.paddingLeft = "10px";
+            buttonLink.paddingRight = "10px";
+            buttonLink.color = "black";
+            buttonLink.cornerRadius = 4;
+            buttonLink.background = "#e0e0e0";
+            buttonLink.onPointerUpObservable.add(function () {
+                const link= window.location.href
+                const slink = link.split("?");
+                newlink=slink[0];              
+                newlink += "?B0m=" + B0s;
+                newlink += "&B0d=" + B0d; 
+                newlink += "&B1f=" + B1s; 
+                newlink += "&B1a=" + B1a; 
+                newlink += "&Fs=" + Fs; 
+                newlink += "&relax=" + relax;
+                newlink += "&pump=" + pump; 
+                newlink += "&pumpdir=" + pumpdir;                
+                newlink += "&larmorth=" 
+                newlink += larmorth? "1" : "0"; 
+                newlink += "&showaxis=" 
+                newlink += showaxis? "1" : "0";
+                newlink += "&showhistory=" 
+                newlink += showHistory? "1" : "0"; 
+                newlink += "&axisprojections="
+                newlink += showAxProj? "1" : "0"; 
+                newlink += "&showrfphase=" 
+                newlink += showRFPhase? "1" : "0";
+                newlink += "&showphaseprojection=" 
+                newlink += showRFPhaseProj? "1" : "0";
+                newlink += "&showplaneprojection=" 
+                newlink +=showPlaneProj? "1" :"0"; 
+                newlink += "&linearrf=" 
+                newlink += LinearRF? "1" : "0";                 
+                console.log("Link to this simulation: " + newlink);
+                window.open(newlink, '_blank').focus();
+            });
+
             var panelB = new BABYLON.GUI.StackPanel();
             panelB.height = "28px";
             panelB.width = "100%";
@@ -1026,6 +1063,7 @@
             panelB.addControl(buttonMatchFrame);
             panelB.addControl(buttonB0rev);
             panelB.addControl(buttonPiPulse);
+            panelB.addControl(buttonLink);
             Masaerpanel.addControl(panelB);
 
 
@@ -1081,7 +1119,7 @@
 
 
             let hist = BABYLON.MeshBuilder.CreateLines("lines", { points: histPoints, updatable: true, colors: histcolors, useVertexAlpha: true }, scene);
-            hist.use
+//            hist.use
 
             let angle = 0.000;
 
@@ -1211,6 +1249,7 @@
 
                 }
 
+                hist.visibility = showHistory ? 1 : 0;
 
                 if (showRFPhase) {
                     rfvec.x = 0.3 * Math.sin(rfphase);
