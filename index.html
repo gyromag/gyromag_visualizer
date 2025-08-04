@@ -256,7 +256,7 @@
             let showaxis = typeof window.initialValues.showaxis === "number" ? window.initialValues.showaxis : true;
             let larmorth = typeof window.initialValues.larmorth === "number" ? window.initialValues.larmorth : false;
             
-            let mag = new BABYLON.Vector3(1.,1., 1.);
+            let mag = new BABYLON.Vector3(0.4,1.0, 0.2);
 
             if(pump>0)
             {            
@@ -310,7 +310,7 @@
             LabelPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
 
             const LabelTitle = new BABYLON.GUI.TextBlock();            
-            LabelTitle.text = `GYROMAG Viaulizer`;            
+            LabelTitle.text = `GYROMAG Visualizer`;            
             LabelTitle.color = "white";
             LabelTitle.fontSize = 38;
             LabelTitle.height = "40px";
@@ -1010,7 +1010,7 @@
             });
 
 
-            var buttonReset0 = BABYLON.GUI.Button.CreateSimpleButton("butMatchFrame", "Rest 0");
+            var buttonReset0 = BABYLON.GUI.Button.CreateSimpleButton("butMatchFrame", "Reset 0");
             buttonReset0.verticalAlignment = 1;
             buttonReset0.width = "110px";
             buttonReset0.height = "28px";
