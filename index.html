@@ -256,7 +256,14 @@
             let showaxis = typeof window.initialValues.showaxis === "number" ? window.initialValues.showaxis : true;
             let larmorth = typeof window.initialValues.larmorth === "number" ? window.initialValues.larmorth : false;
             
-            let mag = new BABYLON.Vector3(1., 1.1, 0);
+            let mag = new BABYLON.Vector3(1.,1., 1.);
+
+            if(pump>0)
+            {            
+                mag = new BABYLON.Vector3(0.,0., 0);
+            }
+            
+
             let rfvec = new BABYLON.Vector3(0.3, 0, 0); // Radiofrequency vector
             
             // GUI
@@ -287,6 +294,66 @@
             Masaerpanel.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
             Masaerpanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
             gui.addControl(Masaerpanel);
+
+
+
+            var LabelPanel = new BABYLON.GUI.StackPanel();
+            LabelPanel.isVertical = true;
+            LabelPanel.width = "100%";
+            LabelPanel.paddingTop = "20px";
+            LabelPanel.paddingLeft = "20px";
+            LabelPanel.paddingRight = "20px";
+            LabelPanel.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+            LabelPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+
+            const LabelTitle = new BABYLON.GUI.TextBlock();            
+            LabelTitle.text = `GYROMAG Viaulizer`;            
+            LabelTitle.color = "white";
+            LabelTitle.fontSize = 38;
+            LabelTitle.height = "40px";
+            LabelTitle.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+            LabelPanel.addControl(LabelTitle);
+
+            const LabelAuthor = new BABYLON.GUI.TextBlock();            
+            LabelAuthor.text = `georg.bison@psi.ch`;            
+            LabelAuthor.color = "white";
+            LabelAuthor.fontSize = 18;
+            LabelAuthor.height = "35px";
+            LabelAuthor.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+            LabelPanel.addControl(LabelAuthor);
+
+            
+            const LabelMag = new BABYLON.GUI.TextBlock();            
+            LabelMag.text = `Magnetization (ensemble avg. spin)`;            
+            LabelMag.color = "yellow";
+            LabelMag.fontSize = 24;
+            LabelMag.height = "50px";
+            LabelMag.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+            LabelMag.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+            LabelPanel.addControl(LabelMag);
+
+
+            const LabelB = new BABYLON.GUI.TextBlock();            
+            LabelB.text = `Magnetic fields`;            
+            LabelB.color = "green";
+            LabelB.fontSize = 24;
+            LabelB.height = "40px";
+            LabelB.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+            LabelB.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+            LabelPanel.addControl(LabelB);
+
+            const LabelLaser = new BABYLON.GUI.TextBlock();            
+            LabelLaser.text = `Pump laser`;            
+            LabelLaser.color = "red";
+            LabelLaser.fontSize = 24;
+            LabelLaser.height = "40px";
+            LabelLaser.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+            LabelLaser.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+            LabelPanel.addControl(LabelLaser);
+
+
+            gui.addControl(LabelPanel);
+
 
 
             const grid = new BABYLON.GUI.Grid();
