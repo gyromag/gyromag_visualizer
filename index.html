@@ -243,7 +243,8 @@
             let B0act = typeof window.initialValues.B0m === "number" ? true : false;
 
             let B1s = typeof window.initialValues.B1f === "number" ? window.initialValues.B1f : 0;
-            let B1act = typeof window.initialValues.B1f === "number" ? true : false;
+            
+            let B1act = B1s==0 ? false : true ;
 
             let B1a = typeof window.initialValues.B1a === "number" ? window.initialValues.B1a : 5;
 
@@ -1012,7 +1013,7 @@
             
             var buttonLink = BABYLON.GUI.Button.CreateSimpleButton("butLink", "Generate link");
             buttonLink.verticalAlignment = 1;
-            buttonLink.width = "130px";
+            buttonLink.width = "170px";
             buttonLink.height = "28px";
             buttonLink.paddingLeft = "10px";
             buttonLink.paddingRight = "10px";
