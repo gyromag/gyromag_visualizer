@@ -1225,14 +1225,14 @@
 
                 let B = new BABYLON.Vector3;
 
-                B0L = new BABYLON.Vector3(B0.x, B0.y + larmorth * Fs / 20., B0.z);
+                B0L = new BABYLON.Vector3(B0.x, B0.y + larmorth * Fs / -20., B0.z);
                 B1 = new BABYLON.Vector3(B1act * B1a / 20. * Math.sin(rfphase), 0, B1act * B1a / 20. * Math.cos(rfphase));
 
                 if (!paused) {
 
                     for (let i = 0; i < len; i++) {
-                        rfphase += B1s * dt / len / 20.;
-                        framephase += Fs * dt / len / 20.;
+                        rfphase -= B1s * dt / len / 20.;
+                        framephase -= Fs * dt / len / 20.;
 
                         if (pulse > 0) {
                             pulse -= B1a / 20. * dt / len;
@@ -1248,9 +1248,9 @@
                             B1 = new BABYLON.Vector3(B1act * B1a / 20. * Math.sin(rfphase), 0, B1act * B1a / 20. * Math.cos(rfphase));
                         }
 
-                        B.x = B0.x + B1.x;
-                        B.y = B0.y + B1.y;
-                        B.z = B0.z + B1.z;
+                        B.x = -1*(B0.x + B1.x);
+                        B.y = -1*(B0.y + B1.y);
+                        B.z = -1*(B0.z + B1.z);
 
                         mag.x += dt / len * (-mag.y * B.z + mag.z * B.y - relax / 20. * mag.x + pump / 20. * (pumpmag.x - mag.x));
                         mag.y += dt / len * (-mag.z * B.x + mag.x * B.z - relax / 20. * mag.y + pump / 20. * (pumpmag.y - mag.y));
