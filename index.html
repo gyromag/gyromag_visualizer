@@ -290,17 +290,32 @@
             }
 
             var Masaerpanel = new BABYLON.GUI.StackPanel();
+            //var Masaerpanel = new BABYLON.GUI.Rectangle()
             Masaerpanel.isVertical = true;
+            Masaerpanel.background = "rgba(0, 0, 0, 0.2)";
 
             Masaerpanel.width = "100%";
-            Masaerpanel.paddingBottom = "20px";
+            Masaerpanel.height = "200px";
+            
+            
+            
+
+            Masaerpanel.onPointerDownObservable.add(function (evt) {                                   
+                    camera.inputs.attached.pointers.detachControl();
+            });
+
+            Masaerpanel.onPointerUpObservable.add(function (evt) {                                   
+                    camera.inputs.attachInput(camera.inputs.attached.pointers);
+            });
+
+
             Masaerpanel.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
             Masaerpanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
             gui.addControl(Masaerpanel);
 
 
 
-            var LabelPanel = new BABYLON.GUI.StackPanel();
+            var LabelPanel = new BABYLON.GUI.StackPanel();            
             LabelPanel.isVertical = true;
             LabelPanel.width = "100%";
             LabelPanel.paddingTop = "20px";
@@ -370,7 +385,7 @@
             grid.height = "115px";
             //            grid.paddingLeft = "20px";
             //          grid.paddingRight = "20px";
-            //grid.paddingTop = "10px";
+            grid.paddingTop = "5px";
             grid.paddingBottom = "10px";
             Masaerpanel.addControl(grid);
 
